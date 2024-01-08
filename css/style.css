@@ -738,3 +738,9 @@ form a{
     background-color: #666;
     color: white;
   }
+  .mySlides {display:none;}
+
+  @font-face {
+    font-family: Dancing;
+    src: url(../font/Dancing_script.ttf);
+  }
