@@ -49,7 +49,8 @@
   }
   .carousel-control.right, .carousel-control.left {
     background-image: none;
-    color: #f4511e;
+    color: red;
+    text-shadow: 4px 4px 4px #000;
   }
   .carousel-indicators li {
     border-color: #f4511e;
@@ -199,3 +200,21 @@
       display: none; /* Hide the carousel text when the screen is less than 600 pixels wide */
     }
   }
+
+  /*Thông Báo*/
+  .news-update{
+    width: 95%;
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+
+}
+.news-update h3{
+    background-color: red;
+    color: white;
+    padding-left: 10px;
+    text-transform: capitalize;
+}
+.news-update marquee{
+    width: 86%;
+}
