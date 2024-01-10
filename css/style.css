@@ -218,3 +218,7 @@
 .news-update marquee{
     width: 86%;
 }
+
+.img-circle person{
+  opacity:0.9;
+}
