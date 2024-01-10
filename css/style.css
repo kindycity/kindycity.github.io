@@ -218,7 +218,7 @@
 .news-update marquee{
     width: 86%;
 }
-
-.img-circle person{
-  opacity:0.9;
+@font-face {
+  font-family: Dancing;
+  src: url(../font/Dancing_script.ttf);
 }

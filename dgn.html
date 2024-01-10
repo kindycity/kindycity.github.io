@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HIM LAM | TRƯỜNG MẦM NON THÀNH PHỐ TUỔI THƠ</title>
+  <meta charset="utf-8">
+  <link rel="apple-touch-icon" sizes="180x180" href="./image/Favicon/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="./image/Favicon/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="./image/Favicon/favicon-16x16.png">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+  <link href="css/style.css" rel="stylesheet" type="text/css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+  @keyframes slide {
+    0% {
+      opacity: 0;
+      transform: translateY(70%);
+    } 
+    100% {
+      opacity: 1;
+      transform: translateY(0%);
+    }
+  }
+  @-webkit-keyframes slide {
+    0% {
+      opacity: 0;
+      -webkit-transform: translateY(70%);
+    } 
+    100% {
+      opacity: 1;
+      -webkit-transform: translateY(0%);
+    }
+  }
+  @media screen and (max-width: 768px) {
+    .col-sm-4 {
+      text-align: center;
+      margin: 25px 0;
+    }
+    .btn btn-success-lg {
+      width: 100%;
+      margin-bottom: 35px;
+    }
+  }
+  @media screen and (max-width: 480px) {
+    .logo {
+      font-size: 150px;
+    }
+  }
+  </style>
+</head>
+<body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
+ <!-- Menu -->
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="containerslide">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" style="font-weight: bold;" href="#myPage">MẦM NON THÀNH PHỐ TUỔI THƠ</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#about">GIỚI THIỆU</a></li>
+        <li><a href="#services">TIN TỨC</a></li>
+        <li><a href="#calendar">LỊCH HỌC</a></li>
+        <li><a href="#portfolio">DINH DƯỠNG</a></li>
+        <li><a href="#pricing">HÌNH ẢNH</a></li>
+        <li><a href="#contact">Y TẾ</a></li>
+        <li><a href="#appstore">TẢI VỀ</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div id="myCarousel" class="carousel slide" data-ride="carousel">
+  <!-- Indicators -->
+  <ol class="carousel-indicators">
+    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+    <li data-target="#myCarousel" data-slide-to="1"></li>
+    <li data-target="#myCarousel" data-slide-to="2"></li>
+    <li data-target="#myCarousel" data-slide-to="3"></li>
+  </ol>
+
+  <!-- Wrapper for slides -->
+  <div class="carousel-inner" role="listbox">
+    <div class="item active">
+      <img src="image/slideshow/0.jpg" alt="New York" width="1200" height="700">
+      <div class="carousel-caption">
+        <h3>Đoàn Đánh Giá Ngoài TPHCM</h3>
+        <p>Tham Gia Đánh Giá Sơ Bộ Trường Mầm Non Thành Phố Tuổi Thơ.</p>
+      </div>      
+    </div>
+
+    <div class="item">
+      <img src="image/slideshow/1.jpg" alt="Chicago" width="1200" height="700">
+      <div class="carousel-caption">
+        <h3>Giáng Sinh 2024</h3>
+        <p>Ngày Giáng Sinh Vui Nhộn Và Đầy Màu Sắc Tại Cơ Sở Him Lam.</p>
+      </div>      
+    </div>
+  
+    <div class="item">
+      <img src="image/slideshow/2.jpg" alt="Los Angeles" width="1200" height="700">
+      <div class="carousel-caption">
+        <h3>Ngày Nhà Giáo Việt Nam</h3>
+        <p>Ngày Nhà Giáo Việt Nam 20/11 Tại Cơ Sở Him Lam.</p>
+      </div>      
+    </div>
+
+    <div class="item">
+      <img src="image/slideshow/3.jpg" alt="Los Angeles" width="1200" height="700">
+      <div class="carousel-caption">
+        <h3>Họp Phụ Huynh Học Sinh</h3>
+        <p>Cuộc Họp Phụ Huynh Học Sinh Cuối Học Kỳ.</p>
+      </div>      
+    </div>
+  </div>
+
+  <!-- Left and right controls -->
+  <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>
+<!-- Aler -->
+<div class="news-update">
+  <h3>Thông báo</h3>
+  <marquee style="border-radius: 10px;text-shadow: 4px 4px 4px #aaa;font-size: 28px;color: red;">Theo thông báo của Bộ Lao động - Thương binh và Xã hội, cán bộ, công chức, viên chức và người lao động được nghỉ Tết Âm lịch năm 2024 từ thứ Năm ngày 8/2/2024 Dương lịch (tức ngày 29 tháng Chạp năm Quý Mão) đến hết thứ Tư ngày 14/2/2024 Dương lịch (tức ngày mùng 5 tháng Giêng năm Giáp Thìn).
+</marquee>
+</div>
+<!--Container Center-->
+<div class="container">
+<div class="row" style="margin-right: 0px;margin-left: 0px;">
+  <h1 style="text-align: center;font-family: 'Dancing', cursive;font-weight: bold;line-height: 1.5em;color: #d02156;text-shadow: 4px 4px 4px #aaa;">Chào mừng đoàn đánh giá ngoài Sở giáo dục và đào tạo thành phố Hồ Chí Minh</h1>
+      <p style="color: #000000; font-size: 12pt; font-family: Times New 'Times New Roman', Times, serif"><span style="color: #222222; font-size: 13pt;">Nhằm cải tiến, nâng cao chất lượng giáo dục nhà trường đáp ứng các tiêu chuẩn chất lượng giáo dục do Bộ Giáo dục và Đào tạo ban hành, trường Mầm Non Thành Phố Tuổi Thơ đã thực hiện tự đánh giá và kiểm định chất lượng giáo dục.</span></p>
+      <p style="color: #000000; font-size: 12pt; font-family: Times New 'Times New Roman', Times, serif"><span style="color: #222222; font-size: 13pt;">Vào ngày 28 tháng 12 năm 2023, trường Mầm Non Thành Phố Tuổi Thơ đã vinh dự được chào đón đoàn đánh giá ngoài Sở Giáo dục và Đào tạo Thành phố Hồ Chí Minh về khảo sát sơ bộ.</span></p>
+      <p style="text-align: center;"><img title="Nhấn vào ảnh để phóng to" class="anhnoidung" onclick="openModal(this)" alt="" src="image/Kiemdinh/0.jpg" style="" width="60%" height=""></p>
+      <p style="color: #000000; font-size: 12pt; font-family: Times New 'Times New Roman', Times, serif"><span style="color: #222222; font-size: 13pt;">Khai mạc chương trình, Bà <strong><em>Nguyễn Thị Vân</em></strong>, Hiệu trưởng nhà trường, đã có đôi lời phát biểu, giới thiệu đại</span><span style="color: #222222; font-size: 13pt;"> diện </span><span style="color: #222222; font-size: 13pt;">, </span><span style="color: #222222; font-size: 13pt;">đại diện trường Mầm non thành phố tuổi thơ, Bà <strong><em>Vương Thuý Liễu </em></strong> – Phó Hiệu trưởng, Phó Chủ tịch hội đồng, Bà Nguyễn Ngọc Thanh Thanh  – Tổ trưởng chuyên môn, Phó Chủ tịch hội đồng, </span><span style="color: #222222; font-size: 13pt;">Đoàn đánh giá ngoài Bà <strong><em>Phạm Thị Thu Diễm </em></strong> – Trưởng đoàn, Bà <strong><em>Huỳnh Kim Uyên </em></strong> – Thư ký, </span><span style="color: #222222; font-size: 13pt;">và giới thiệu các thành viên trong hội đồng tự đánh giá của nhà trường.</span></p>
+      <p style="text-align: center;"><img title="Nhấn vào ảnh để phóng to" class="anhnoidung" onclick="openModal(this)" alt="" src="image/Kiemdinh/3.jpg" style="" width="60%" height=""></p>
+      <p style="color: #000000; font-size: 12pt; font-family: Times New 'Times New Roman', Times, serif; text-align: justify;"><span style="color: #222222; font-size: 13pt;">Tiếp đến là phần làm việc của đoàn đánh giá ngoài.</span></p>
+      <p style="color: #000000; font-size: 12pt; font-family: Times New 'Times New Roman', Times, serif; text-align: justify;"><span style="color: #222222; font-size: 13pt;">Bà <strong><em>Phạm Thị Thu Diễm </em></strong> – Trưởng đoàn – đọc quyết định thành lập đoàn và báo cáo kết quả nghiên cứu hồ sơ đánh giá.</span></p>
+      <p style="text-align: center;"><img title="Nhấn vào ảnh để phóng to" class="anhnoidung" onclick="openModal(this)" alt="" src="image/Kiemdinh/1.jpg" style="" width="60%" height=""></p>
+      <p style="color: #000000; font-size: 12pt; font-family: Times New 'Times New Roman', Times, serif"><span style="color: #222222; font-size: 13pt;">Bà <strong><em>Huỳnh Kim Uyên </em></strong> – Thư ký – thông qua kế hoạch khảo sát chính thức.</span></p>
+      <p style="text-align: center;"><img title="Nhấn vào ảnh để phóng to" class="anhnoidung" onclick="openModal(this)" alt="" src="image/Kiemdinh/6.jpg" style="" width="60%" height=""></p>            
+      <p style="color: #000000; font-size: 12pt; font-family: Times New 'Times New Roman', Times, serif"><span style="color: #222222; font-size: 13pt;">Hội đồng tự đánh giá đã cùng trao đổi với đoàn đánh giá ngoài và thống nhất 02 ngày khảo sát chính thức sẽ là 16 và 17 tháng 1 năm 2024.</span></p>
+      <p style="color: #000000; font-size: 12pt; font-family: Times New 'Times New Roman', Times, serif"><span style="color: #222222; font-size: 13pt;">Kết thúc buổi làm việc, đoàn đánh giá ngoài cùng chụp hình lưu niệm với nhà trường.</span></p>
+      <p style="text-align: center;"><img title="Nhấn vào ảnh để phóng to" class="anhnoidung" onclick="openModal(this)" alt="" src="image/Kiemdinh/4.jpg" style="" width="60%" height=""></p>
+      <p style="text-align: center;"><img title="Nhấn vào ảnh để phóng to" class="anhnoidung" onclick="openModal(this)" alt="" src="image/Kiemdinh/5.jpg" style="" width="60%" height=""></p>
+  </div> 
+</div>
+
+<!-- Image of location/map -->
+<div class="row col-sm-6">
+<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d244.99338338142923!2d106.69876709049589!3d10.742642001206901!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752fa1b457f0f9%3A0x688664b0a48afd8e!2sKindy%20City%20International%20Preschool!5e0!3m2!1svi!2s!4v1704818937479!5m2!1svi!2s" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+</div>
+<div class="row col-sm-6">
+  <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d346.47583497794363!2d106.70620618856798!3d10.740140555910948!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752bec50012237%3A0x1e49c4e405b1cc93!2sKindy%20City%20International%20Preschool!5e0!3m2!1svi!2sus!4v1704854721161!5m2!1svi!2sus" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </div>
+<footer class="container-fluid text-center">
+
+  <div class="row">
+    <div class="col-sm-5" style="text-align: left;">
+      <p>ĐỂ LẠI THÔNG TIN CHÚNG TÔI SẼ LIÊN HỆ TRONG 24 GIỜ</p>
+      <p><span class="glyphicon glyphicon-map-marker"></span> Cơ Sở 01: 25 - 27 Đường Số 6, Him Lam,P.Tân Hưng,Q7,TP.HCM</p>
+      <p><span class="glyphicon glyphicon-map-marker"></span> Cơ Sở 02: 33 Đường 31,P.Tân Quy,Q7,TP.HCM</p>
+      <p><span class="glyphicon glyphicon-phone"></span> 3636 2778 - 3636 2788</p>
+      <p><span class="glyphicon glyphicon-envelope"></span> info@kindycity.edu.vn</p>
+    </div>
+    <div class="col-sm-7 slideanim">
+      <div class="row">
+        <div class="col-sm-6 form-group">
+          <input class="form-control" id="name" name="name" placeholder="Name" type="text" required>
+        </div>
+        <div class="col-sm-6 form-group">
+          <input class="form-control" id="email" name="email" placeholder="Email" type="email" required>
+        </div>
+      </div>
+      <textarea class="form-control" id="comments" name="comments" placeholder="Comment" rows="5"></textarea><br>
+      <div class="row">
+        <div class="col-sm-12 form-group">
+          <button class="btn btn-success btn btn-success-default pull-right" type="submit">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <a href="#myPage" title="To Top">
+    <span class="glyphicon glyphicon-chevron-up"></span>
+  </a>
+  <p>Design By <a href="https://www.kindycity.giuhub.io" title="Visit w3schools">Nguyễn Thanh Như</a></p>
+</footer>
+
+<script>
+$(document).ready(function(){
+  // Add smooth scrolling to all links in navbar + footer link
+  $(".navbar a, footer a[href='#myPage']").on('click', function(event) {
+    // Make sure this.hash has a value before overriding default behavior
+    if (this.hash !== "") {
+      // Prevent default anchor click behavior
+      event.preventDefault();
+
+      // Store hash
+      var hash = this.hash;
+
+      // Using jQuery's animate() method to add smooth page scroll
+      // The optional number (900) specifies the number of milliseconds it takes to scroll to the specified area
+      $('html, body').animate({
+        scrollTop: $(hash).offset().top
+      }, 900, function(){
+   
+        // Add hash (#) to URL when done scrolling (default click behavior)
+        window.location.hash = hash;
+      });
+    } // End if
+  });
+  
+  $(window).scroll(function() {
+    $(".slideanim").each(function(){
+      var pos = $(this).offset().top;
+
+      var winTop = $(window).scrollTop();
+        if (pos < winTop + 600) {
+          $(this).addClass("slide");
+        }
+    });
+  });
+})
+</script>
+
+</body>
+</html>
