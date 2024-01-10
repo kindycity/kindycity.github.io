@@ -50,9 +50,72 @@
     }
   }
   </style>
+  <!--Block Coppy-->
+	<style>
+		body{
+		-webkit-touch-callout: none;
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		-o-user-select: none;
+		user-select: none;
+		}
+		</style><script type=”text/JavaScript”>
+		function killCopy(e){
+		return false
+		}
+		function reEnable(){
+		return true
+		}
+		document.onselectstart=new Function (“return false”)
+		if (window.sidebar){
+		document.onmousedown=killCopy
+		document.onclick=reEnable
+		}
+	</script>
+	<script language="JavaScript">
+    window.onload = function() {
+        document.addEventListener("contextmenu", function(e) {
+            e.preventDefault();
+        }, false);
+        document.addEventListener("keydown", function(e) {
+            //document.onkeydown = function(e) {
+            // "I" key
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 73) {
+                disabledEvent(e);
+            }
+            // "J" key
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 74) {
+                disabledEvent(e);
+            }
+            // "S" key + macOS
+            if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+                disabledEvent(e);
+            }
+            // "U" key
+            if (e.ctrlKey && e.keyCode == 85) {
+                disabledEvent(e);
+            }
+            // "F12" key
+            if (event.keyCode == 123) {
+                disabledEvent(e);
+            }
+        }, false);
+ 
+        function disabledEvent(e) {
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            } else if (window.event) {
+                window.event.cancelBubble = true;
+            }
+            e.preventDefault();
+            return false;
+        }
+    };
+</script>
 </head>
 <body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
- <!-- Menu -->
+<!-- Logo & Menu -->
 <nav class="navbar navbar-default navbar-fixed-top">
   <div class="containerslide">
     <div class="navbar-header">
@@ -66,12 +129,12 @@
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav navbar-right">
         <li><a href="https://kindycity.github.io/">GIỚI THIỆU</a></li>
-        <li><a href="https://kindycity.github.io/#services">TIN TỨC</a></li>
-        <li><a href="#calendar">LỊCH HỌC</a></li>
-        <li><a href="#menu">DINH DƯỠNG</a></li>
-        <li><a href="#pic">HÌNH ẢNH</a></li>
-        <li><a href="#health">Y TẾ</a></li>
-        <li><a href="#appstore">TẢI VỀ</a></li>
+        <li><a href="https://kindycity.github.io/">TIN TỨC</a></li>
+        <li><a href="https://kindycity.github.io/">LỊCH HỌC</a></li>
+        <li><a href="https://kindycity.github.io/">DINH DƯỠNG</a></li>
+        <li><a href="https://kindycity.github.io/">HÌNH ẢNH</a></li>
+        <li><a href="https://kindycity.github.io/">Y TẾ</a></li>
+        <li><a href="https://kindycity.github.io/">TẢI VỀ</a></li>
       </ul>
     </div>
   </div>
@@ -131,12 +194,16 @@
     <span class="sr-only">Next</span>
   </a>
 </div>
+
 <!-- Aler -->
+<div class="container">
 <div class="news-update">
   <h3>Thông báo</h3>
-  <marquee style="border-radius: 10px;text-shadow: 4px 4px 4px #aaa;font-size: 28px;color: red;">Theo thông báo của Bộ Lao động - Thương binh và Xã hội, cán bộ, công chức, viên chức và người lao động được nghỉ Tết Âm lịch năm 2024 từ thứ Năm ngày 8/2/2024 Dương lịch (tức ngày 29 tháng Chạp năm Quý Mão) đến hết thứ Tư ngày 14/2/2024 Dương lịch (tức ngày mùng 5 tháng Giêng năm Giáp Thìn).
+  <marquee style="margin-top: 8px; border-radius: 10px;text-shadow: 4px 4px 4px #aaa;font-size: 28px;color: red;">Theo thông báo của Bộ Lao động - Thương binh và Xã hội, cán bộ, công chức, viên chức và người lao động được nghỉ Tết Âm lịch năm 2024 từ thứ Năm ngày 8/2/2024 Dương lịch (tức ngày 29 tháng Chạp năm Quý Mão) đến hết thứ Tư ngày 14/2/2024 Dương lịch (tức ngày mùng 5 tháng Giêng năm Giáp Thìn).
 </marquee>
 </div>
+</div>
+
 <!--Container Center-->
 <div class="container">
 <div class="row" style="margin-right: 0px;margin-left: 0px;">
@@ -157,85 +224,87 @@
       <p style="text-align: center;"><img title="Nhấn vào ảnh để phóng to" class="anhnoidung" onclick="openModal(this)" alt="" src="image/Kiemdinh/5.jpg" style="" width="60%" height=""></p>
   </div> 
 </div>
-
 <!-- Image of location/map -->
-<div class="row col-sm-6">
-<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d244.99338338142923!2d106.69876709049589!3d10.742642001206901!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752fa1b457f0f9%3A0x688664b0a48afd8e!2sKindy%20City%20International%20Preschool!5e0!3m2!1svi!2s!4v1704818937479!5m2!1svi!2s" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-</div>
-<div class="row col-sm-6">
-  <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d346.47583497794363!2d106.70620618856798!3d10.740140555910948!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752bec50012237%3A0x1e49c4e405b1cc93!2sKindy%20City%20International%20Preschool!5e0!3m2!1svi!2sus!4v1704854721161!5m2!1svi!2sus" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+<div class="container">
+  <div class="row col-sm-6">
+    <h3 style="text-align: center;">CƠ SỞ 01</h3>
+  <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d244.99338338142923!2d106.69876709049589!3d10.742642001206901!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752fa1b457f0f9%3A0x688664b0a48afd8e!2sKindy%20City%20International%20Preschool!5e0!3m2!1svi!2s!4v1704818937479!5m2!1svi!2s" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
   </div>
-<footer class="container-fluid text-center">
-
-  <div class="row">
-    <div class="col-sm-5" style="text-align: left;">
-      <p>ĐỂ LẠI THÔNG TIN CHÚNG TÔI SẼ LIÊN HỆ TRONG 24 GIỜ</p>
-      <p><span class="glyphicon glyphicon-map-marker"></span> Cơ Sở 01: 25 - 27 Đường Số 6, Him Lam,P.Tân Hưng,Q7,TP.HCM</p>
-      <p><span class="glyphicon glyphicon-map-marker"></span> Cơ Sở 02: 33 Đường 31,P.Tân Quy,Q7,TP.HCM</p>
-      <p><span class="glyphicon glyphicon-phone"></span> 3636 2778 - 3636 2788</p>
-      <p><span class="glyphicon glyphicon-envelope"></span> info@kindycity.edu.vn</p>
-    </div>
-    <div class="col-sm-7 slideanim">
-      <div class="row">
-        <div class="col-sm-6 form-group">
-          <input class="form-control" id="name" name="name" placeholder="Name" type="text" required>
-        </div>
-        <div class="col-sm-6 form-group">
-          <input class="form-control" id="email" name="email" placeholder="Email" type="email" required>
-        </div>
-      </div>
-      <textarea class="form-control" id="comments" name="comments" placeholder="Comment" rows="5"></textarea><br>
-      <div class="row">
-        <div class="col-sm-12 form-group">
-          <button class="btn btn-success btn btn-success-default pull-right" type="submit">Send</button>
-        </div>
-      </div>
+  <div class="row col-sm-6">
+    <h3 style="text-align: center;">CƠ SỞ 02</h3>
+    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d346.47583497794363!2d106.70620618856798!3d10.740140555910948!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752bec50012237%3A0x1e49c4e405b1cc93!2sKindy%20City%20International%20Preschool!5e0!3m2!1svi!2sus!4v1704854721161!5m2!1svi!2sus" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
     </div>
   </div>
-
-
-  <a href="#myPage" title="To Top">
-    <span class="glyphicon glyphicon-chevron-up"></span>
-  </a>
-  <p>Design By <a href="https://www.kindycity.giuhub.io" title="Visit w3schools">Nguyễn Thanh Như</a></p>
-</footer>
-
-<script>
-$(document).ready(function(){
-  // Add smooth scrolling to all links in navbar + footer link
-  $(".navbar a, footer a[href='#myPage']").on('click', function(event) {
-    // Make sure this.hash has a value before overriding default behavior
-    if (this.hash !== "") {
-      // Prevent default anchor click behavior
-      event.preventDefault();
-
-      // Store hash
-      var hash = this.hash;
-
-      // Using jQuery's animate() method to add smooth page scroll
-      // The optional number (900) specifies the number of milliseconds it takes to scroll to the specified area
-      $('html, body').animate({
-        scrollTop: $(hash).offset().top
-      }, 900, function(){
-   
-        // Add hash (#) to URL when done scrolling (default click behavior)
-        window.location.hash = hash;
-      });
-    } // End if
-  });
+  <footer class="container-fluid text-center">
+    <div class="row">
+      <div class="col-sm-5" style="text-align: left;">
+        <p>ĐỂ LẠI THÔNG TIN CHÚNG TÔI SẼ LIÊN HỆ TRONG 24 GIỜ</p>
+        <p><span class="glyphicon glyphicon-map-marker"></span> Cơ Sở 01: 25 - 27 Đường Số 6, Him Lam,P.Tân Hưng,Q7,TP.HCM</p>
+        <p><span class="glyphicon glyphicon-map-marker"></span> Cơ Sở 02: 33 Đường 31,P.Tân Quy,Q7,TP.HCM</p>
+        <p><span class="glyphicon glyphicon-phone"></span> 3636 2778 - 3636 2788</p>
+        <p><span class="glyphicon glyphicon-envelope"></span> info@kindycity.edu.vn</p>
+      </div>
+      <div class="col-sm-7 slideanim">
+        <div class="row">
+          <div class="col-sm-6 form-group">
+            <input class="form-control" id="name" name="name" placeholder="Name" type="text" required>
+          </div>
+          <div class="col-sm-6 form-group">
+            <input class="form-control" id="email" name="email" placeholder="Email" type="email" required>
+          </div>
+        </div>
+        <textarea class="form-control" id="comments" name="comments" placeholder="Comment" rows="5"></textarea><br>
+        <div class="row">
+          <div class="col-sm-12 form-group">
+            <button class="btn btn-success btn btn-success-default pull-right" type="submit">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
   
-  $(window).scroll(function() {
-    $(".slideanim").each(function(){
-      var pos = $(this).offset().top;
-
-      var winTop = $(window).scrollTop();
-        if (pos < winTop + 600) {
-          $(this).addClass("slide");
-        }
+  
+    <a href="#myPage" title="To Top">
+      <span class="glyphicon glyphicon-chevron-up"></span>
+    </a>
+    <p>Design By <a href="https://www.kindycity.giuhub.io" title="Visit w3schools">Nguyễn Thanh Như</a></p>
+  </footer>
+  
+  <script>
+  $(document).ready(function(){
+    // Add smooth scrolling to all links in navbar + footer link
+    $(".navbar a, footer a[href='#myPage']").on('click', function(event) {
+      // Make sure this.hash has a value before overriding default behavior
+      if (this.hash !== "") {
+        // Prevent default anchor click behavior
+        event.preventDefault();
+  
+        // Store hash
+        var hash = this.hash;
+  
+        // Using jQuery's animate() method to add smooth page scroll
+        // The optional number (900) specifies the number of milliseconds it takes to scroll to the specified area
+        $('html, body').animate({
+          scrollTop: $(hash).offset().top
+        }, 900, function(){
+     
+          // Add hash (#) to URL when done scrolling (default click behavior)
+          window.location.hash = hash;
+        });
+      } // End if
     });
-  });
-})
-</script>
-
+    
+    $(window).scroll(function() {
+      $(".slideanim").each(function(){
+        var pos = $(this).offset().top;
+  
+        var winTop = $(window).scrollTop();
+          if (pos < winTop + 600) {
+            $(this).addClass("slide");
+          }
+      });
+    });
+  })
+  </script>
+  
 </body>
 </html>
