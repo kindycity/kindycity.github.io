@@ -222,7 +222,10 @@
   font-family: Dancing;
   src: url(../font/Dancing_script.ttf);
 }
-
+@font-face {
+  font-family: htop;
+  src: url(../font/Courier_New.ttf);
+}
 /*call*/
 
 .call-buton .cc-calto-action-ripple {
