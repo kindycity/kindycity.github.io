@@ -295,3 +295,11 @@
     background-color: #fff;
     color: #f4511e;
   }
+  /**/
+  .formf {
+    margin: auto;
+    background: url(../image/footer.png)no-repeat;
+    background-size: 106%;
+    background-position-y: 100%;
+
+  }
