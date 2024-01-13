@@ -285,15 +285,15 @@
   /*btn*/
   .btn1 {
     padding: 10px 20px;
-    background-color: #f4511e;
+    background-color: #215;
     color: #f1f1f1;
     border-radius: 0;
     transition: .2s;
   }
   .btn1:hover, .btn:focus {
-    border: 1px solid #f4511e;
+    border: 1px solid #215;
     background-color: #fff;
-    color: #f4511e;
+    color: #215;
   }
   /**/
   .formf {
