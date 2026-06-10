@@ -11,7 +11,7 @@ window.kindergartenData = {
       "id": "st-1710000001",
       "name": "Nguyễn Minh Anh",
       "class": "Koala",
-      "image": "C:\\Users\\Administrator\\Downloads\\HimLam\\HimLam\\app\\src\\main\\assets\\images\\1.kl\\chloe.jpg",
+      "image": "images/user.jpg",
       "sound": "C:\\Users\\Administrator\\Downloads\\HimLam\\HimLam\\app\\src\\main\\assets\\sound\\1.kl\\chloe.mp3",
       "isBus": true,
       "busRoute": "1"
