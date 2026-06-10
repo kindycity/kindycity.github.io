@@ -2,12 +2,15 @@
 <html>
 <head>
   <title>ĐÓN BÉ HL | TRƯỜNG MẦM NON QUỐC TẾ KINDYCITY</title>
-    <meta charset="utf-8">
+	<meta charset="utf-8">
+    
     <meta name="referrer" content="no-referrer">
+    
     <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no, maximum-scale=1.0, shrink-to-fit=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="icon" type="image/png" sizes="32x32" href="images/icon/favicon-16x16.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="images/icon/favicon-32x32.png">
+
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<link rel="icon" type="image/png" sizes="32x32" href="images/icon/favicon-16x16.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="images/icon/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="512x512" href="images/icon/favicon-512x512.png">
   <link rel="icon" type="image/png" sizes="1024x1024" href="images/icon/1024.png">
   <link rel="stylesheet" href="css/w3.css">
@@ -16,6 +19,7 @@
   <link rel="stylesheet" href="css/bootstrap.min.css">
   <script src="js/jquery.min.js"></script>
   <script src="js/bootstrap.min.js"></script>
+<!--Colo tìm kiếm-->
 <style>
   .highlight {
       background-color: yellow;
@@ -26,6 +30,8 @@
     clear: both;
   }
 </style>
+
+<!--Block Copy-->
 <style>
   body{
   -webkit-touch-callout: none;
@@ -38,50 +44,58 @@
   div.gallery {
   border: 1px solid #ccc;
   }
+
   div.gallery:hover {
   border: 1px solid #777;
   }
+
   div.gallery img {
   width: 100%;
   height: auto;
   }
+
   div.desc {
   padding: 15px;
   text-align: center;
   }
+
   * {
   box-sizing: border-box;
   }
+
   .responsive {
   padding: 0 6px;
   float: left;
   width: 24.99999%;
   }
+
   @media only screen and (max-width: 700px) {
   .responsive {
     width: 49.99999%;
     margin: 6px 0;
   }
   }
+
   @media only screen and (max-width: 500px) {
   .responsive {
     width: 100%;
   }
   }
+
   .clearfix:after {
   content: "";
   display: table;
   clear: both;
   }
   </style>
-<script type="text/JavaScript">
+<script type=”text/JavaScript”>
   function killCopy(e){
   return false
   }
   function reEnable(){
   return true
   }
-  document.onselectstart=new Function ("return false")
+  document.onselectstart=new Function (“return false”)
   if (window.sidebar){
   document.onmousedown=killCopy
   document.onclick=reEnable
@@ -93,18 +107,24 @@
           e.preventDefault();
       }, false);
       document.addEventListener("keydown", function(e) {
+          //document.onkeydown = function(e) {
+          // "I" key
           if (e.ctrlKey && e.shiftKey && e.keyCode == 73) {
               disabledEvent(e);
           }
+          // "J" key
           if (e.ctrlKey && e.shiftKey && e.keyCode == 74) {
               disabledEvent(e);
           }
+          // "S" key + macOS
           if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
               disabledEvent(e);
           }
+          // "U" key
           if (e.ctrlKey && e.keyCode == 85) {
               disabledEvent(e);
           }
+          // "F12" key
           if (event.keyCode == 123) {
               disabledEvent(e);
           }
@@ -126,9 +146,11 @@
 
   <noscript>
         <style>
+            /* 1. Ẩn tuyệt đối toàn bộ các thành phần giao diện khác của web */
             body > *:not(noscript) {
                 display: none !important;
             }
+            /* 2. Thiết kế giao diện báo lỗi full màn hình */
             .no-js-overlay {
                 position: fixed; top: 0; left: 0; width: 100%; height: 100%;
                 background-color: #f8fafc; display: flex; align-items: center;
@@ -151,6 +173,7 @@
         </div>
     </noscript>
 
+<!-- Sidebar (hidden by default) -->
 <nav class="w3-sidebar w3-bar-block w3-card w3-top w3-xlarge w3-animate-left" style="display:none;z-index:2;width:40%;min-width:300px" id="mySidebar">
   <a onclick="downloadApk();w3_close()" class="w3-bar-item w3-button" style="text-align: center;">
     <img src="images/icon/download.png">
@@ -160,8 +183,10 @@
   </a>
 </nav>
 
+<!-- Top menu -->
 <div class="w3-top ">
   <div class="top-round-rainbow w3-white w3-xlarge" style="max-width:1200px;margin:auto">
+    <!-- <div class="w3-button w3-padding-16 w3-left" onclick="w3_open()">☰</div> -->
     <div class="w3-center w3-padding-16">
       <a onclick="openCity(event, 'koala');w3_close()" class="w3-bar-item w3-button"><img src="images/icon/koala.png" style="width: 6rem; height: 6rem;"></a>
       <a onclick="openCity(event, 'panda');w3_close()" class="w3-bar-item w3-button"><img src="images/icon/panda.png" style="width: 6rem; height: 6rem;"></a>
@@ -171,41 +196,50 @@
   </div>
 </div>
 
+<!-- !PAGE CONTENT! -->
 <div id="content" class=" w3-main w3-content w3-padding" style="max-width:1200px;margin-top:100px">
 
+  <!-- KOALA 0>49 -->
    <div class="w3-row-padding w3-padding-16 w3-center city" style="display: none;" id="koala">
     <div class="class-wrapper">
       <div class="student-list" id="container-Koala">
           </div>
     </div>
 </div>
+  <!-- PANDA -->
   <div class="w3-row-padding w3-padding-16 w3-center city" style="display: none;" id="panda">
     <div class="class-wrapper">
       <div class="student-list" id="container-Panda">
           </div>
     </div>
   </div>
+    <!-- DOLPHIN -->
      <div class="w3-row-padding w3-padding-16 w3-center city" style="display: none;" id="dolphin">
     <div class="class-wrapper">
       <div class="student-list" id="container-Dolphin">
           </div>
     </div>
 </div>
+    <!-- GIRAFFE -->
      <div class="w3-row-padding w3-padding-16 w3-center city" style="display: none;" id="giraffe">
     <div class="class-wrapper">
       <div class="student-list" id="container-Giraffe">
           </div>
     </div>
     </div>
+<!-- End page content -->
 
+<!--import Audio-->
 <audio id="sound0" src="sound/"></audio>
 </div>
 
+<!--SCRIPT Sound library-->
 <script src="js/koala.js"></script>
 <script src="js/panda.js"></script>
 <script src="js/dolphin.js"></script>
 <script src="js/giraffe.js"></script>
 <script src="js/bus.js"></script>
+
 <script src="js/scripts.js"></script>
 
 <script>
@@ -214,11 +248,13 @@
   }
 </script>
 
+<!--Stop-->
 <section class="call-buton" onclick="window.location.reload();"><a class="cc-calto-action-ripple"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-volume-mute" viewBox="0 0 16 16">
-  <path d="M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5 Sav.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06M6 5.04 4.312 6.39A.5.5 0 0 1 4 6.5H2v3h2a.5.5 0 0 1 .312.11L6 10.96zm7.854.606a.5.5 0 0 1 0 .708L12.207 8l1.647 1.646a.5.5 0 0 1-.708.708L11.5 8.707l-1.646 1.647a.5.5 0 0 1-.708-.708L10.793 8 9.146 6.354a.5.5 0 1 1 .708-.708L11.5 7.293l1.646-1.647a.5.5 0 0 1 .708 0"/>
+  <path d="M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06M6 5.04 4.312 6.39A.5.5 0 0 1 4 6.5H2v3h2a.5.5 0 0 1 .312.11L6 10.96zm7.854.606a.5.5 0 0 1 0 .708L12.207 8l1.647 1.646a.5.5 0 0 1-.708.708L11.5 8.707l-1.646 1.647a.5.5 0 0 1-.708-.708L10.793 8 9.146 6.354a.5.5 0 1 1 .708-.708L11.5 7.293l1.646-1.647a.5.5 0 0 1 .708 0"/>
 </svg><span class="num"></span>
 </a></section>
 
+<!--Bus-->
 <section class="bus-buton" onclick="playClickBus()">
   <a class="cc-calto-action-ripple" style="text-align: center;">
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bus-front" viewBox="0 0 16 16">
@@ -227,33 +263,35 @@
     </svg>
   </a>
 </section>
-
     <script>
-        const trinhPhatAmThanh = new Audio();
-
+        // Kích hoạt ngay khi mở trang web
+        document.addEventListener("DOMContentLoaded", () => {
+            taiDuLieuTuGoogleDrive();
+        });
         document.addEventListener("DOMContentLoaded", () => {
             taiDuLieuTuGoogleDrive();
             
+            // ==========================================
+            // THUẬT TOÁN MỞ KHÓA AI TRÊN ĐIỆN THOẠI DI ĐỘNG
+            // ==========================================
             let daMoKhoaAI = false;
             document.body.addEventListener('click', function() {
-                if (!daMoKhoaAI) {
-                    trinhPhatAmThanh.src = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA';
-                    trinhPhatAmThanh.play().catch(()=>{});
-                    
-                    if ('speechSynthesis' in window) {
-                        let utterance = new SpeechSynthesisUtterance(''); 
-                        window.speechSynthesis.speak(utterance);
-                    }
+                if (!daMoKhoaAI && 'speechSynthesis' in window) {
+                    // Phát một âm thanh tàng hình để báo cho điện thoại biết người dùng đã tương tác
+                    let utterance = new SpeechSynthesisUtterance(''); 
+                    window.speechSynthesis.speak(utterance);
                     daMoKhoaAI = true;
                     console.log("🔓 Trình duyệt di động đã mở khóa hệ thống AI");
                 }
-            }, { once: true });
+            }, { once: true }); // Sự kiện chỉ chạy đúng 1 lần duy nhất rồi tự hủy
         });
         
+        // HÀM 1: TẢI DỮ LIỆU ĐÁM MÂY TỪ GOOGLE DRIVE
         async function taiDuLieuTuGoogleDrive() {
-            const DRIVE_FILE_ID = "1rO3Br6-g8A_BNPfjvwIFUAs3DgTMc9a4";
+            const FILE_ID = "1rO3Br6-g8A_BNPfjvwIFUAs3DgTMc9a4"; 
             const API_KEY = "AIzaSyBGLYBq1raWQVVFE-LwT09_4WhB9I0nRPI";
 
+            // Đường dẫn API chính thức của Google Drive (Không bao giờ bị lỗi CORS)
             const urlFetch = `https://www.googleapis.com/drive/v3/files/${FILE_ID}?alt=media&key=${API_KEY}`;
 
             try {
@@ -263,6 +301,7 @@
                 const data = await response.json();
                 window.kindergartenData = data;
                 
+                // Sau khi có dữ liệu thành công -> Gọi hàm vẽ giao diện
                 veGiaoDienHocSinhDong();
             } catch (error) {
                 console.error("Lỗi đồng bộ đám mây:", error);
@@ -270,23 +309,28 @@
             }
         }
 
+        // HÀM 2: VẼ GIAO DIỆN HỌC SINH ĐỘNG LÊN MÀN HÌNH
         function veGiaoDienHocSinhDong() {
             if (!window.kindergartenData || !window.kindergartenData.students) return;
 
             const data = window.kindergartenData;
 
+            // Bước 1: Xóa trắng dữ liệu cũ trong các vùng chứa lớp (tránh bị lặp thẻ khi tải lại)
             data.classes.forEach(className => {
                 const container = document.getElementById(`container-${className}`);
                 if (container) container.innerHTML = '';
             });
 
+            // Bước 2: Quét qua danh sách học sinh và tạo thẻ
             data.students.forEach(student => {
                 const container = document.getElementById(`container-${student.class}`);
-                if (!container) return; 
+                if (!container) return; // Nếu lớp không tồn tại trong HTML thì bỏ qua
 
+                // Tạo khung ngoài cùng (sử dụng class responsive của bạn)
                 const cardWrapper = document.createElement('div');
                 cardWrapper.className = 'responsive'; 
 
+                // Tạo cấu trúc thẻ bên trong (ảnh + tên) giống y hệt file cũ của bạn
                 cardWrapper.innerHTML = `
                     <div class="gallery" style="cursor: pointer; border-radius: 12px; overflow: hidden; background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 15px;">
                         <img src="${student.image}" alt="${student.name}" style="width: 100%; aspect-ratio: 1/1; object-fit: cover; border-bottom: 2px solid #f1f5f9;">
@@ -327,28 +371,25 @@
                 phatThanhAIGiongNu(`Mời học sinh ${studentName} lớp ${className} ra về`);
             }
         }
-
+        // HÀM 4: BỘ NÃO AI PHÁT THANH GIỌNG NỮ (HYBRID)
         let giongNoiHeThong = [];
         function capNhatHeThongGiong() {
             giongNoiHeThong = window.speechSynthesis.getVoices();
         }
-        
-        if (window.speechSynthesis) {
-            capNhatHeThongGiong();
+        capNhatHeThongGiong();
+        if (window.speechSynthesis.onvoiceschanged !== undefined) {
             window.speechSynthesis.onvoiceschanged = capNhatHeThongGiong;
         }
 
         function phatThanhAIGiongNu(text) {
             let thanhCongGiongCucBo = false;
 
+            // KIỂM TRA CÁCH 1: Trình duyệt cục bộ
             if ('speechSynthesis' in window) {
-                if (window.speechSynthesis.speaking) {
-                    window.speechSynthesis.cancel();
-                }
-
+                window.speechSynthesis.cancel();
                 const utterance = new SpeechSynthesisUtterance(text);
                 utterance.lang = 'vi-VN';
-                utterance.rate = 0.99; 
+                utterance.rate = 0.99; // Tốc độ hơi nhanh một chút theo thiết lập của bạn
 
                 if (giongNoiHeThong.length === 0) {
                     giongNoiHeThong = window.speechSynthesis.getVoices();
@@ -370,20 +411,19 @@
 
                     if (giongNuChuan) {
                         utterance.voice = giongNuChuan;
-                        setTimeout(() => {
-                            window.speechSynthesis.speak(utterance);
-                        }, 50);
+                        window.speechSynthesis.speak(utterance);
                         thanhCongGiongCucBo = true;
                         console.log("🔊 Phát bằng giọng:", giongNuChuan.name);
                     }
                 }
             }
 
+            // KIỂM TRA CÁCH 2: Dùng API Google Cloud nếu cách 1 xịt
             if (!thanhCongGiongCucBo) {
                 console.log("🚀 Chuyển sang AI Cloud TTS Giọng Nữ...");
                 const urlCloudTTS = `https://translate.google.com/translate_tts?ie=UTF-8&tl=vi&client=tw-ob&q=${encodeURIComponent(text)}`;
-                trinhPhatAmThanh.src = urlCloudTTS;
-                trinhPhatAmThanh.play().catch(err => {
+                const amThanhCloud = new Audio(urlCloudTTS);
+                amThanhCloud.play().catch(err => {
                     console.error("Lỗi phát âm thanh Cloud:", err);
                 });
             }
