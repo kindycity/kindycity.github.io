@@ -3,7 +3,11 @@
 <head>
   <title>ĐÓN BÉ HL | TRƯỜNG MẦM NON QUỐC TẾ KINDYCITY</title>
 	<meta charset="utf-8">
-	<meta name='viewport' content='width=device-width,initial-scale=1.0,user-scalable=no, maximum-scale=1.0, shrink-to-fit=no'>
+    
+    <meta name="referrer" content="no-referrer">
+    
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no, maximum-scale=1.0, shrink-to-fit=no">
+
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<link rel="icon" type="image/png" sizes="32x32" href="images/icon/favicon-16x16.png">
 	<link rel="icon" type="image/png" sizes="16x16" href="images/icon/favicon-32x32.png">
@@ -264,7 +268,24 @@
         document.addEventListener("DOMContentLoaded", () => {
             taiDuLieuTuGoogleDrive();
         });
-
+        document.addEventListener("DOMContentLoaded", () => {
+            taiDuLieuTuGoogleDrive();
+            
+            // ==========================================
+            // THUẬT TOÁN MỞ KHÓA AI TRÊN ĐIỆN THOẠI DI ĐỘNG
+            // ==========================================
+            let daMoKhoaAI = false;
+            document.body.addEventListener('click', function() {
+                if (!daMoKhoaAI && 'speechSynthesis' in window) {
+                    // Phát một âm thanh tàng hình để báo cho điện thoại biết người dùng đã tương tác
+                    let utterance = new SpeechSynthesisUtterance(''); 
+                    window.speechSynthesis.speak(utterance);
+                    daMoKhoaAI = true;
+                    console.log("🔓 Trình duyệt di động đã mở khóa hệ thống AI");
+                }
+            }, { once: true }); // Sự kiện chỉ chạy đúng 1 lần duy nhất rồi tự hủy
+        });
+        
         // HÀM 1: TẢI DỮ LIỆU ĐÁM MÂY TỪ GOOGLE DRIVE
         async function taiDuLieuTuGoogleDrive() {
             const FILE_ID = "19UbNoshkIFWJU-IJcJsV6aNralejiuHa"; 
