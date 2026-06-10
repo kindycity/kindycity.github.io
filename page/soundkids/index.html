@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ĐÓN BÉ HL | TRƯỜNG MẦM NON QUỐC TẾ KINDYCITY</title>
+	<meta charset="utf-8">
+	<meta name='viewport' content='width=device-width,initial-scale=1.0,user-scalable=no, maximum-scale=1.0, shrink-to-fit=no'>
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<link rel="icon" type="image/png" sizes="32x32" href="images/icon/favicon-16x16.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="images/icon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="images/icon/favicon-512x512.png">
+  <link rel="icon" type="image/png" sizes="1024x1024" href="images/icon/1024.png">
+  <link rel="stylesheet" href="css/w3.css">
+  <link rel="stylesheet" href="css/css.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <script src="js/jquery.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+<!--Colo tìm kiếm-->
+<style>
+  .highlight {
+      background-color: yellow;
+  }
+  .clearfix:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+</style>
+
+<!--Block Copy-->
+<style>
+  body{
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  }
+  div.gallery {
+  border: 1px solid #ccc;
+  }
+
+  div.gallery:hover {
+  border: 1px solid #777;
+  }
+
+  div.gallery img {
+  width: 100%;
+  height: auto;
+  }
+
+  div.desc {
+  padding: 15px;
+  text-align: center;
+  }
+
+  * {
+  box-sizing: border-box;
+  }
+
+  .responsive {
+  padding: 0 6px;
+  float: left;
+  width: 24.99999%;
+  }
+
+  @media only screen and (max-width: 700px) {
+  .responsive {
+    width: 49.99999%;
+    margin: 6px 0;
+  }
+  }
+
+  @media only screen and (max-width: 500px) {
+  .responsive {
+    width: 100%;
+  }
+  }
+
+  .clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+  }
+  </style>
+<script type=”text/JavaScript”>
+  function killCopy(e){
+  return false
+  }
+  function reEnable(){
+  return true
+  }
+  document.onselectstart=new Function (“return false”)
+  if (window.sidebar){
+  document.onmousedown=killCopy
+  document.onclick=reEnable
+  }
+</script>
+<script language="JavaScript">
+  window.onload = function() {
+      document.addEventListener("contextmenu", function(e) {
+          e.preventDefault();
+      }, false);
+      document.addEventListener("keydown", function(e) {
+          //document.onkeydown = function(e) {
+          // "I" key
+          if (e.ctrlKey && e.shiftKey && e.keyCode == 73) {
+              disabledEvent(e);
+          }
+          // "J" key
+          if (e.ctrlKey && e.shiftKey && e.keyCode == 74) {
+              disabledEvent(e);
+          }
+          // "S" key + macOS
+          if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+              disabledEvent(e);
+          }
+          // "U" key
+          if (e.ctrlKey && e.keyCode == 85) {
+              disabledEvent(e);
+          }
+          // "F12" key
+          if (event.keyCode == 123) {
+              disabledEvent(e);
+          }
+      }, false);
+
+      function disabledEvent(e) {
+          if (e.stopPropagation) {
+              e.stopPropagation();
+          } else if (window.event) {
+              window.event.cancelBubble = true;
+          }
+          e.preventDefault();
+          return false;
+      }
+  };
+</script>
+</head>
+<body>
+
+  <noscript>
+        <style>
+            /* 1. Ẩn tuyệt đối toàn bộ các thành phần giao diện khác của web */
+            body > *:not(noscript) {
+                display: none !important;
+            }
+            /* 2. Thiết kế giao diện báo lỗi full màn hình */
+            .no-js-overlay {
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background-color: #f8fafc; display: flex; align-items: center;
+                justify-content: center; z-index: 999999; font-family: sans-serif; p: 20px;
+            }
+            .no-js-box {
+                background: white; padding: 40px; border-radius: 16px;
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+                text-align: center; max-width: 440px; border: 1px solid #e2e8f0;
+            }
+        </style>
+        <div class="no-js-overlay">
+            <div class="no-js-box">
+                <div style="font-size: 50px; margin-bottom: 15px;">⚠️</div>
+                <h2 style="font-size: 20px; font-weight: bold; color: #0f172a; margin: 0 0 10px 0;">Yêu cầu bật JavaScript</h2>
+                <p style="font-size: 14px; color: #64748b; line-height: 1.6; margin: 0;">
+                    Trình duyệt của bạn đang tắt JavaScript. Vui lòng kích hoạt JavaScript trong phần cài đặt để hệ thống hoạt động chính xác các tính năng nạp học sinh tự động và gọi bus.
+                </p>
+            </div>
+        </div>
+    </noscript>
+
+<!-- Sidebar (hidden by default) -->
+<nav class="w3-sidebar w3-bar-block w3-card w3-top w3-xlarge w3-animate-left" style="display:none;z-index:2;width:40%;min-width:300px" id="mySidebar">
+  <a onclick="downloadApk();w3_close()" class="w3-bar-item w3-button" style="text-align: center;">
+    <img src="images/icon/download.png">
+  </a>
+  <a onclick="w3_close()" class="w3-bar-item w3-button">
+    <img src="images/icon/bus.png" onclick="playClickBus()">
+  </a>
+</nav>
+
+<!-- Top menu -->
+<div class="w3-top ">
+  <div class="top-round-rainbow w3-white w3-xlarge" style="max-width:1200px;margin:auto">
+    <!-- <div class="w3-button w3-padding-16 w3-left" onclick="w3_open()">☰</div> -->
+    <div class="w3-center w3-padding-16">
+      <a onclick="openCity(event, 'koala');w3_close()" class="w3-bar-item w3-button"><img src="images/icon/koala.png" style="width: 6rem; height: 6rem;"></a>
+      <a onclick="openCity(event, 'panda');w3_close()" class="w3-bar-item w3-button"><img src="images/icon/panda.png" style="width: 6rem; height: 6rem;"></a>
+      <a onclick="openCity(event, 'dolphin');w3_close()" class="w3-bar-item w3-button"><img src="images/icon/dolphin.png" style="width: 6rem; height: 6rem;"></a>
+      <a onclick="openCity(event, 'giraffe');w3_close()" class="w3-bar-item w3-button"><img src="images/icon/giraffe.png" style="width: 6rem; height: 6rem;"></a>
+    </div>
+  </div>
+</div>
+
+<!-- !PAGE CONTENT! -->
+<div id="content" class=" w3-main w3-content w3-padding" style="max-width:1200px;margin-top:100px">
+
+  <!-- KOALA 0>49 -->
+   <div class="w3-row-padding w3-padding-16 w3-center city" style="display: none;" id="koala">
+    <div class="class-wrapper">
+      <div class="student-list" id="container-Koala">
+          </div>
+    </div>
+</div>
+  <!-- PANDA -->
+  <div class="w3-row-padding w3-padding-16 w3-center city" style="display: none;" id="panda">
+    <div class="class-wrapper">
+      <div class="student-list" id="container-Panda">
+          </div>
+    </div>
+  </div>
+    <!-- DOLPHIN -->
+     <div class="w3-row-padding w3-padding-16 w3-center city" style="display: none;" id="dolphin">
+    <div class="class-wrapper">
+      <div class="student-list" id="container-Dolphin">
+          </div>
+    </div>
+</div>
+    <!-- GIRAFFE -->
+     <div class="w3-row-padding w3-padding-16 w3-center city" style="display: none;" id="giraffe">
+    <div class="class-wrapper">
+      <div class="student-list" id="container-Giraffe">
+          </div>
+    </div>
+    </div>
+<!-- End page content -->
+
+<!--import Audio-->
+<audio id="sound0" src="sound/"></audio>
+</div>
+
+<!--SCRIPT Sound library-->
+<script src="js/koala.js"></script>
+<script src="js/panda.js"></script>
+<script src="js/dolphin.js"></script>
+<script src="js/giraffe.js"></script>
+<script src="js/bus.js"></script>
+
+<script src="js/scripts.js"></script>
+
+<script>
+  function downloadApk() {
+      window.location.href = 'https://navigationcode.github.io/page/update.apk';
+  }
+</script>
+
+<!--Stop-->
+<section class="call-buton" onclick="window.location.reload();"><a class="cc-calto-action-ripple"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-volume-mute" viewBox="0 0 16 16">
+  <path d="M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06M6 5.04 4.312 6.39A.5.5 0 0 1 4 6.5H2v3h2a.5.5 0 0 1 .312.11L6 10.96zm7.854.606a.5.5 0 0 1 0 .708L12.207 8l1.647 1.646a.5.5 0 0 1-.708.708L11.5 8.707l-1.646 1.647a.5.5 0 0 1-.708-.708L10.793 8 9.146 6.354a.5.5 0 1 1 .708-.708L11.5 7.293l1.646-1.647a.5.5 0 0 1 .708 0"/>
+</svg><span class="num"></span>
+</a></section>
+
+<!--Bus-->
+<section class="bus-buton" onclick="playClickBus()">
+  <a class="cc-calto-action-ripple" style="text-align: center;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bus-front" viewBox="0 0 16 16">
+      <path d="M5 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0m8 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m-6-1a1 1 0 1 0 0 2h2a1 1 0 1 0 0-2zm1-6c-1.876 0-3.426.109-4.552.226A.5.5 0 0 0 3 4.723v3.554a.5.5 0 0 0 .448.497C4.574 8.891 6.124 9 8 9s3.426-.109 4.552-.226A.5.5 0 0 0 13 8.277V4.723a.5.5 0 0 0-.448-.497A44 44 0 0 0 8 4m0-1c-1.837 0-3.353.107-4.448.22a.5.5 0 1 1-.104-.994A44 44 0 0 1 8 2c1.876 0 3.426.109 4.552.226a.5.5 0 1 1-.104.994A43 43 0 0 0 8 3"/>
+      <path d="M15 8a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1V2.64c0-1.188-.845-2.232-2.064-2.372A44 44 0 0 0 8 0C5.9 0 4.208.136 3.064.268 1.845.408 1 1.452 1 2.64V4a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1v3.5c0 .818.393 1.544 1 2v2a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5V14h6v1.5a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-2c.607-.456 1-1.182 1-2zM8 1c2.056 0 3.71.134 4.822.261.676.078 1.178.66 1.178 1.379v8.86a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 11.5V2.64c0-.72.502-1.301 1.178-1.379A43 43 0 0 1 8 1"/>
+    </svg>
+  </a>
+</section>
+<script src="database.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            hienThiDanhSachHocSinh();
+        });
+
+        function hienThiDanhSachHocSinh() {
+            if (!window.kindergartenData || !window.kindergartenData.students) return;
+
+            const data = window.kindergartenData;
+
+            // Xóa sạch dữ liệu cũ trong các vùng chứa lớp trước khi nạp mới
+            data.classes.forEach(className => {
+                const container = document.getElementById(`container-${className}`);
+                if (container) container.innerHTML = '';
+            });
+
+            // Quét qua danh sách học sinh từ Dashboard
+            data.students.forEach(student => {
+                const container = document.getElementById(`container-${student.class}`);
+                if (!container) return; // Bỏ qua nếu lớp không khớp với HTML hiện có
+
+                // Tạo thẻ bằng đối tượng DOM để đảm bảo an toàn chuỗi ký tự
+                const card = document.createElement('div');
+                card.className = 'w3-quarter'; // Sửa lại tên class này nếu bạn dùng tên khác trong CSS (vd: student-card)
+
+                // Bơm cấu trúc ảnh và tên vào thẻ
+                card.innerHTML = `
+                    <img src="${student.image}" alt="${student.name}" class="gallery">
+                    <h3 class="student-name">${student.name}</h3>
+                `;
+
+                // Sự kiện click vào thẻ để gọi âm thanh
+                card.addEventListener('click', () => {
+                    playClickSound(student.sound, student.name);
+                });
+
+                container.appendChild(card);
+            });
+        }
+
+        // HÀM ĐIỀU PHỐI ÂM THANH
+        function playClickSound(soundUrl, studentName) {
+            let cleanUrl = soundUrl ? soundUrl.trim().replace(/\\/g, '/') : '';
+            const coFileAmThanh = cleanUrl !== "" && cleanUrl !== "sound/" && !cleanUrl.endsWith('/');
+
+            if (coFileAmThanh) {
+                const audio = new Audio(cleanUrl);
+                audio.play().catch(error => {
+                    console.warn("Lỗi tệp MP3, chuyển giao dữ liệu cho AI giọng Nữ:");
+                    phatThanhAIGiongNu(`Mời học sinh ${studentName} ra về`);
+                });
+            } else {
+                phatThanhAIGiongNu(`Mời học sinh ${studentName} ra về`);
+            }
+        }
+
+        // =========================================================
+        // BỘ NÃO AI PHÁT THANH GIỌNG NỮ THÔNG MINH (HYBRID ENGINE)
+        // =========================================================
+        let giongNoiHeThong = [];
+        function capNhatHeThongGiong() {
+            giongNoiHeThong = window.speechSynthesis.getVoices();
+        }
+        capNhatHeThongGiong();
+        if (window.speechSynthesis.onvoiceschanged !== undefined) {
+            window.speechSynthesis.onvoiceschanged = capNhatHeThongGiong;
+        }
+
+        function phatThanhAIGiongNu(text) {
+            let thanhCongGiongCucBo = false;
+
+            // KIỂM TRA CÁCH 1: Sử dụng bộ đọc của trình duyệt nếu có sẵn
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'vi-VN';
+                utterance.rate = 0.99;
+
+                if (giongNoiHeThong.length === 0) {
+                    giongNoiHeThong = window.speechSynthesis.getVoices();
+                }
+
+                const giongTiengViet = giongNoiHeThong.filter(voice => voice.lang.includes('vi') || voice.lang.includes('VN'));
+
+                if (giongTiengViet.length > 0) {
+                    // Loại trừ giọng nam mặc định "Microsoft An"
+                    const locGiongNu = giongTiengViet.filter(voice => !voice.name.includes(' An'));
+                    
+                    let giongNuChuan = locGiongNu.find(voice => 
+                        voice.name.toLowerCase().includes('hoaimy') || 
+                        voice.name.toLowerCase().includes('linh') ||
+                        voice.name.toLowerCase().includes('google')
+                    );
+
+                    if (!giongNuChuan && locGiongNu.length > 0) giongNuChuan = locGiongNu[0];
+                    if (!giongNuChuan) giongNuChuan = giongTiengViet[0];
+
+                    if (giongNuChuan) {
+                        utterance.voice = giongNuChuan;
+                        window.speechSynthesis.speak(utterance);
+                        thanhCongGiongCucBo = true;
+                        console.log("🔊 Phát bằng giọng máy tính:", giongNuChuan.name);
+                    }
+                }
+            }
+
+            // KIỂM TRA CÁCH 2 (CỨU NGUY): Nếu cách 1 thất bại (Lỗi không tìm thấy bộ nhận diện)
+            // Hệ thống lập tức kích hoạt luồng truyền thanh đám mây Google TTS (Giọng Nữ Chuẩn 100%)
+            if (!thanhCongGiongCucBo) {
+                console.log("🚀 Kích hoạt giải pháp dự phòng: Chuyển sang AI Cloud TTS Giọng Nữ...");
+                
+                // Sử dụng đường truyền API TTS chuẩn hóa Tiếng Việt của Google
+                const urlCloudTTS = `https://translate.google.com/translate_tts?ie=UTF-8&tl=vi&client=tw-ob&q=${encodeURIComponent(text)}`;
+                
+                const amThanhCloud = new Audio(urlCloudTTS);
+                amThanhCloud.play().catch(err => {
+                    console.error("Cảnh báo đường truyền âm thanh API:", err);
+                });
+            }
+        }
+    </script>
+</body>
+</html>

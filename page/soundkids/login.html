@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Nhập Hệ Thống Bảo Mật</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+</head>
+<body class="bg-slate-900 flex items-center justify-center min-h-screen p-4 font-sans selection:bg-indigo-500 selection:text-white">
+
+    <div class="bg-white/95 backdrop-blur shadow-2xl rounded-2xl max-w-md w-full p-8 border border-slate-100 relative overflow-hidden">
+        
+        <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
+
+        <div class="text-center mb-8">
+            <div class="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center mx-auto text-indigo-600 text-2xl shadow-inner mb-4">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h2 class="text-2xl font-black text-slate-900 tracking-tight">XÁC THỰC TRUY CẬP</h2>
+            <p class="text-xs text-slate-500 mt-1 uppercase font-bold tracking-wider">Hệ thống quản lý nội bộ HL</p>
+        </div>
+
+        <div id="phone-container" class="space-y-5">
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-2 tracking-wide">Số điện thoại quản trị viên</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400 font-bold text-sm border-r border-slate-200 pr-2.5 my-2">+84</span>
+                    <input type="tel" id="phone-number" placeholder="9xxxxxxxx" class="w-full pl-16 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 font-semibold tracking-wide placeholder:font-normal placeholder:text-slate-400 transition-all">
+                </div>
+                <p class="text-[11px] text-slate-400 mt-2 leading-relaxed">Nhập số điện thoại bỏ chữ số 0 đầu tiên. Hệ thống từ xa sẽ gửi một mã OTP gồm 6 chữ số qua tin nhắn SMS để xác minh quyền sở hữu.</p>
+            </div>
+
+            <div id="recaptcha-container" class="flex justify-center my-2"></div>
+
+            <button onclick="sendOTPCode()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-indigo-600/20 transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-wider">
+                <i class="fas fa-paper-plane text-xs"></i> Gửi mã OTP xác thực
+            </button>
+        </div>
+
+        <div id="otp-container" class="space-y-5 hidden">
+            <div>
+                <div class="flex justify-between items-center mb-2">
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide">Mã xác thực OTP</label>
+                    <button onclick="backToPhoneInput()" class="text-xs text-indigo-600 hover:underline font-semibold">Thay đổi số</button>
+                </div>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400"><i class="fas fa-key text-xs"></i></span>
+                    <input type="text" id="otp-code" maxlength="6" placeholder="Nhập 6 chữ số..." class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-center text-lg font-bold tracking-[0.5em] text-slate-900 placeholder:tracking-normal placeholder:font-normal placeholder:text-sm">
+                </div>
+            </div>
+
+            <button onclick="verifyOTPCode()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-emerald-500/20 transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-wider">
+                <i class="fas fa-lock-open text-xs"></i> Xác minh & Đăng nhập
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        // =========================================================
+        // CẤU HÌNH THÔNG SỐ KHÓA BẢO MẬT FIREBASE CỦA BẠN
+        // =========================================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyA1xxxxxxxxxxxxxxxxxxxxxxxx",
+            authDomain: "du-an-cua-ban.firebaseapp.com",
+            projectId: "du-an-cua-ban",
+            storageBucket: "du-an-cua-ban.appspot.com",
+            messagingSenderId: "1234567890",
+            appId: "1:1234567890:web:abcdefghijklmnop"
+        };
+        
+        // Khởi tạo nền tảng bảo mật
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        let confirmationResult = null;
+
+        // Khởi tạo công cụ reCAPTCHA chống spam ẩn ngầm
+        window.onload = function() {
+            window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+                'size': 'invisible'
+            });
+        };
+
+        // GỬI MÃ OTP QUA SMS
+        async function sendOTPCode() {
+            const phoneInput = document.getElementById('phone-number').value.trim();
+            if(!phoneInput) return alert('Vui lòng nhập số điện thoại đăng nhập!');
+            
+            // Định dạng chuẩn số điện thoại quốc tế: +849xxxxxxxx
+            const formattedPhone = '+84' + phoneInput;
+            const appVerifier = window.recaptchaVerifier;
+
+            try {
+                confirmationResult = await auth.signInWithPhoneNumber(formattedPhone, appVerifier);
+                
+                // Chuyển đổi giao diện sang màn hình nhập OTP
+                document.getElementById('phone-container').classList.add('hidden');
+                document.getElementById('otp-container').classList.remove('hidden');
+                alert('🔑 Mã OTP đã được gửi từ xa đến số điện thoại của bạn qua tin nhắn SMS!');
+            } catch (error) {
+                console.error(error);
+                alert('Lỗi gửi SMS: ' + error.message);
+                if(window.recaptchaVerifier) window.recaptchaVerifier.render().then(widgetId => grecaptcha.reset(widgetId));
+            }
+        }
+
+        // XÁC MINH MÃ OTP ĐỂ MỞ KHÓA TRANG TRÌNH DUYỆT
+        async function verifyOTPCode() {
+            const code = document.getElementById('otp-code').value.trim();
+            if(code.length !== 6) return alert('Mã OTP phải gồm đầy đủ 6 chữ số!');
+
+            try {
+                const result = await confirmationResult.confirm(code);
+                const user = result.user;
+
+                // Tạo Token bảo mật cục bộ lưu vào phiên làm việc (Session) của trình duyệt
+                sessionStorage.setItem('HL_ADMIN_SESSION', 'AUTHENTICATED_OK');
+                sessionStorage.setItem('HL_ADMIN_UID', user.uid);
+
+                alert('🎉 Xác thực thành công! Hệ thống đang chuyển hướng vào Dashboard...');
+                window.location.href = 'dashboard.html'; // Chuyển hướng an toàn
+            } catch (error) {
+                console.error(error);
+                alert('Mã xác thực OTP không chính xác hoặc đã hết hạn!');
+            }
+        }
+
+        function backToPhoneInput() {
+            document.getElementById('phone-container').classList.remove('hidden');
+            document.getElementById('otp-container').classList.add('hidden');
+            document.getElementById('otp-code').value = '';
+        }
+    </script>
+</body>
+</html>
