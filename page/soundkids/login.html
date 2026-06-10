@@ -87,25 +87,52 @@
             });
         };
 
-        // GỬI MÃ OTP QUA SMS
+        // GỬI MÃ OTP QUA SMS HOẶC KIỂM TRA SỐ ĐẶC BIỆT
         async function sendOTPCode() {
-            const phoneInput = document.getElementById('phone-number').value.trim();
+            let phoneInput = document.getElementById('phone-number').value.trim();
             if(!phoneInput) return alert('Vui lòng nhập số điện thoại đăng nhập!');
             
-            // Định dạng chuẩn số điện thoại quốc tế: +849xxxxxxxx
+            // Tự động cắt số 0 ở đầu nếu người dùng nhập thừa
+            if (phoneInput.startsWith('0')) {
+                phoneInput = phoneInput.substring(1);
+            }
+
+            // =========================================================
+            // TÍNH NĂNG ĐƯỜNG TẮT DÀNH CHO QUẢN TRỊ VIÊN ĐẶC BIỆT
+            // =========================================================
+            // Thay số '987654321' thành số điện thoại của bạn (nhớ bỏ số 0 ở đầu)
+            const SO_DIEN_THOAI_DAC_BIET = "333310277"; 
+            
+            if (phoneInput === SO_DIEN_THOAI_DAC_BIET) {
+                // Nếu đúng số đặc biệt: Cấp quyền giả lập ngay lập tức và chuyển trang
+                sessionStorage.setItem('HL_ADMIN_SESSION', 'AUTHENTICATED_OK');
+                sessionStorage.setItem('HL_ADMIN_UID', 'ADMIN_MASTER_KEY');
+                
+                alert('🚀 Nhận diện Quản trị viên cấp cao. Đăng nhập thành công!');
+                window.location.href = 'dashboard.html';
+                return; // Kết thúc hàm tại đây, KHÔNG gửi tin nhắn SMS nữa.
+            }
+            // =========================================================
+
+            // NẾU LÀ SỐ BÌNH THƯỜNG: Tiếp tục quy trình gửi SMS OTP của Firebase
             const formattedPhone = '+84' + phoneInput;
             const appVerifier = window.recaptchaVerifier;
 
             try {
+                // Hiển thị vòng xoay chờ để người dùng biết hệ thống đang xử lý
+                document.querySelector('button[onclick="sendOTPCode()"]').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý...';
+                
                 confirmationResult = await auth.signInWithPhoneNumber(formattedPhone, appVerifier);
                 
                 // Chuyển đổi giao diện sang màn hình nhập OTP
                 document.getElementById('phone-container').classList.add('hidden');
                 document.getElementById('otp-container').classList.remove('hidden');
-                alert('🔑 Mã OTP đã được gửi từ xa đến số điện thoại của bạn qua tin nhắn SMS!');
+                alert('🔑 Mã OTP đã được gửi đến số điện thoại của bạn!');
             } catch (error) {
                 console.error(error);
-                alert('Lỗi gửi SMS: ' + error.message);
+                alert('Lỗi gửi SMS: Không thể xác minh lúc này. Vui lòng thử lại sau!');
+                // Khôi phục lại nút bấm nếu lỗi
+                document.querySelector('button[onclick="sendOTPCode()"]').innerHTML = '<i class="fas fa-paper-plane text-xs"></i> Gửi mã OTP xác thực';
                 if(window.recaptchaVerifier) window.recaptchaVerifier.render().then(widgetId => grecaptcha.reset(widgetId));
             }
         }
