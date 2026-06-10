@@ -260,16 +260,14 @@
   </a>
 </section>
     <script>
+        // Kích hoạt ngay khi mở trang web
         document.addEventListener("DOMContentLoaded", () => {
             taiDuLieuTuGoogleDrive();
         });
 
-        // Hàm kết nối lấy dữ liệu công khai từ Google Drive không cần token đăng nhập
+        // HÀM 1: TẢI DỮ LIỆU ĐÁM MÂY TỪ GOOGLE DRIVE
         async function taiDuLieuTuGoogleDrive() {
-            // Thay thế chuỗi ID file của bạn vào đây giống như bên Dashboard
             const FILE_ID = "16jE1TqsCCowbvTs9wyZEP0itPtzWPr2t"; 
-            
-            // Đường dẫn tải trực tiếp file thô vượt qua tường lửa CORS của Google Drive
             const urlFetch = `https://docs.google.com/uc?export=download&id=${FILE_ID}`;
 
             try {
@@ -277,32 +275,68 @@
                 if (!response.ok) throw new Error("Không thể tải cấu hình");
                 
                 const data = await response.json();
-                
-                // Gán dữ liệu đám mây vào biến môi trường toàn cục của trang web
                 window.kindergartenData = data;
                 
-                // Khởi chạy hàm vẽ giao diện học sinh lên màn hình
+                // Sau khi có dữ liệu thành công -> Gọi hàm vẽ giao diện
                 veGiaoDienHocSinhDong();
             } catch (error) {
                 console.error("Lỗi đồng bộ đám mây:", error);
-                alert("Hệ thống không thể tải danh sách học sinh từ Google Drive từ xa. Vui lòng kiểm tra quyền chia sẻ tệp.");
+                alert("Hệ thống không thể tải danh sách học sinh từ Google Drive. Vui lòng kiểm tra kết nối mạng hoặc quyền chia sẻ tệp.");
             }
         }
 
-        // Đổi tên hàm hiển thị cũ thành hàm vẽ giao diện sau khi có dữ liệu
+        // HÀM 2: VẼ GIAO DIỆN HỌC SINH ĐỘNG LÊN MÀN HÌNH
         function veGiaoDienHocSinhDong() {
             if (!window.kindergartenData || !window.kindergartenData.students) return;
 
             const data = window.kindergartenData;
 
-            // Tiến hành vòng lặp xóa dữ liệu cũ và appendChild thẻ card học sinh vào các container lớp 
-            // (Giữ nguyên toàn bộ logic xử lý tạo card DOM và sự kiện âm thanh giọng nữ tôi đã viết cho bạn ở phiên làm việc trước)...
+            // Bước 1: Xóa trắng dữ liệu cũ trong các vùng chứa lớp (tránh bị lặp thẻ khi tải lại)
             data.classes.forEach(className => {
                 const container = document.getElementById(`container-${className}`);
                 if (container) container.innerHTML = '';
-            });}
+            });
 
-        // HÀM ĐIỀU PHỐI ÂM THANH
+            // Bước 2: Quét qua danh sách học sinh và tạo thẻ
+            data.students.forEach(student => {
+                const container = document.getElementById(`container-${student.class}`);
+                if (!container) return; // Nếu lớp không tồn tại trong HTML thì bỏ qua
+
+                // Tạo khung ngoài cùng (sử dụng class responsive của bạn)
+                const cardWrapper = document.createElement('div');
+                cardWrapper.className = 'responsive'; 
+
+                // Tạo cấu trúc thẻ bên trong (ảnh + tên) giống y hệt file cũ của bạn
+                cardWrapper.innerHTML = `
+                    <div class="gallery" style="cursor: pointer; border-radius: 12px; overflow: hidden; background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 15px;">
+                        <img src="${student.image}" alt="${student.name}" style="width: 100%; aspect-ratio: 1/1; object-fit: cover; border-bottom: 2px solid #f1f5f9;">
+                        <div class="desc" style="padding: 12px 5px; text-align: center; font-weight: bold; font-size: 16px; color: #4f46e5; text-transform: capitalize;">
+                            ${student.name}
+                        </div>
+                    </div>
+                `;
+
+                // Bắt sự kiện Click vào thẻ để phát âm thanh
+                cardWrapper.addEventListener('click', () => {
+                    playClickSound(student.sound, student.name);
+                });
+
+                // Gắn thẻ học sinh vào đúng mục lớp học
+                container.appendChild(cardWrapper);
+            });
+            
+            // Gắn thêm một thẻ div xóa float để lưới ảnh không bị vỡ
+            data.classes.forEach(className => {
+                const container = document.getElementById(`container-${className}`);
+                if (container) {
+                    const clearfix = document.createElement('div');
+                    clearfix.className = 'clearfix';
+                    container.appendChild(clearfix);
+                }
+            });
+        }
+
+        // HÀM 3: ĐIỀU PHỐI ÂM THANH KHI CLICK
         function playClickSound(soundUrl, studentName) {
             let cleanUrl = soundUrl ? soundUrl.trim().replace(/\\/g, '/') : '';
             const coFileAmThanh = cleanUrl !== "" && cleanUrl !== "sound/" && !cleanUrl.endsWith('/');
@@ -310,7 +344,7 @@
             if (coFileAmThanh) {
                 const audio = new Audio(cleanUrl);
                 audio.play().catch(error => {
-                    console.warn("Lỗi tệp MP3, chuyển giao dữ liệu cho AI giọng Nữ:");
+                    console.warn("Lỗi tệp MP3 gốc, kích hoạt AI dự phòng:", error);
                     phatThanhAIGiongNu(`Mời học sinh ${studentName} ra về`);
                 });
             } else {
@@ -318,9 +352,7 @@
             }
         }
 
-        // =========================================================
-        // BỘ NÃO AI PHÁT THANH GIỌNG NỮ THÔNG MINH (HYBRID ENGINE)
-        // =========================================================
+        // HÀM 4: BỘ NÃO AI PHÁT THANH GIỌNG NỮ (HYBRID)
         let giongNoiHeThong = [];
         function capNhatHeThongGiong() {
             giongNoiHeThong = window.speechSynthesis.getVoices();
@@ -333,12 +365,12 @@
         function phatThanhAIGiongNu(text) {
             let thanhCongGiongCucBo = false;
 
-            // KIỂM TRA CÁCH 1: Sử dụng bộ đọc của trình duyệt nếu có sẵn
+            // KIỂM TRA CÁCH 1: Trình duyệt cục bộ
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
                 const utterance = new SpeechSynthesisUtterance(text);
                 utterance.lang = 'vi-VN';
-                utterance.rate = 0.99;
+                utterance.rate = 0.99; // Tốc độ hơi nhanh một chút theo thiết lập của bạn
 
                 if (giongNoiHeThong.length === 0) {
                     giongNoiHeThong = window.speechSynthesis.getVoices();
@@ -347,7 +379,6 @@
                 const giongTiengViet = giongNoiHeThong.filter(voice => voice.lang.includes('vi') || voice.lang.includes('VN'));
 
                 if (giongTiengViet.length > 0) {
-                    // Loại trừ giọng nam mặc định "Microsoft An"
                     const locGiongNu = giongTiengViet.filter(voice => !voice.name.includes(' An'));
                     
                     let giongNuChuan = locGiongNu.find(voice => 
@@ -363,22 +394,18 @@
                         utterance.voice = giongNuChuan;
                         window.speechSynthesis.speak(utterance);
                         thanhCongGiongCucBo = true;
-                        console.log("🔊 Phát bằng giọng máy tính:", giongNuChuan.name);
+                        console.log("🔊 Phát bằng giọng:", giongNuChuan.name);
                     }
                 }
             }
 
-            // KIỂM TRA CÁCH 2 (CỨU NGUY): Nếu cách 1 thất bại (Lỗi không tìm thấy bộ nhận diện)
-            // Hệ thống lập tức kích hoạt luồng truyền thanh đám mây Google TTS (Giọng Nữ Chuẩn 100%)
+            // KIỂM TRA CÁCH 2: Dùng API Google Cloud nếu cách 1 xịt
             if (!thanhCongGiongCucBo) {
-                console.log("🚀 Kích hoạt giải pháp dự phòng: Chuyển sang AI Cloud TTS Giọng Nữ...");
-                
-                // Sử dụng đường truyền API TTS chuẩn hóa Tiếng Việt của Google
+                console.log("🚀 Chuyển sang AI Cloud TTS Giọng Nữ...");
                 const urlCloudTTS = `https://translate.google.com/translate_tts?ie=UTF-8&tl=vi&client=tw-ob&q=${encodeURIComponent(text)}`;
-                
                 const amThanhCloud = new Audio(urlCloudTTS);
                 amThanhCloud.play().catch(err => {
-                    console.error("Cảnh báo đường truyền âm thanh API:", err);
+                    console.error("Lỗi phát âm thanh Cloud:", err);
                 });
             }
         }

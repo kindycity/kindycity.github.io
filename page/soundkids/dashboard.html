@@ -30,7 +30,7 @@
             <div class="max-w-7xl mx-auto px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
                 <div>
                     <h1 class="text-xl font-bold text-slate-900 tracking-tight">HỆ THỐNG ĐÓN BÉ KINDYCITY Q7</h1>
-                    <p class="text-xs text-slate-500">Trang quản lý dữ liệu nội bộ (Không Server)</p>
+                    <p class="text-xs text-slate-500">Trang quản lý dữ liệu đám mây (Cloud Database)</p>
                 </div>
                 <div class="flex items-center gap-2">
                     <button onclick="connectGoogleDrive()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium shadow transition-all flex items-center gap-2 text-sm">
@@ -79,7 +79,7 @@
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Đường dẫn tệp Âm thanh</label>
-                            <input type="text" id="student-sound" required placeholder="Nếu không nhập AI sẽ chạy" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm">
+                            <input type="text" id="student-sound" placeholder="Nếu không nhập AI sẽ chạy" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm">
                         </div>
                         
                         <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-slate-100 pt-4 mt-2">
@@ -155,7 +155,6 @@
         </main>
     </div>
 
-
     <script>
         // =========================================================
         // 1. LỚP CHẶN BẢO MẬT (NGHIÊM NGẶT)
@@ -169,13 +168,12 @@
         })();
 
         // =========================================================
-        // 2. KHỞI TẠO BIẾN VÀ BỘ NHỚ TẠM CỤC BỘ
+        // 2. KHỞI TẠO BIẾN CỤC BỘ DỰ PHÒNG
         // =========================================================
-        let localData = window.kindergartenData || { classes: ["Koala", "Panda", "Dolphin", "Giraffe"], students: [] };
-        let fileHandle = null;
+        let localData = { classes: ["Koala", "Panda", "Dolphin", "Giraffe"], students: [] };
 
         // =========================================================
-        // CẤU HÌNH THÔNG SỐ GOOGLE DRIVE API CỦA BẠN
+        // 3. CẤU HÌNH GOOGLE DRIVE API KẾT NỐI TỰ ĐỘNG
         // =========================================================
         const GOOGLE_CLIENT_ID = "148093918345-hn636dsef0hjm7j2l0e2j9120blnf1ll.apps.googleusercontent.com";
         const DRIVE_FILE_ID = "16jE1TqsCCowbvTs9wyZEP0itPtzWPr2t";
@@ -183,13 +181,12 @@
         let accessToken = null;
         let tokenClient = null;
 
-        // TỰ ĐỘNG KHỞI TẠO VÀ KẾT NỐI NGẦM KHI MỞ TRANG
         document.addEventListener('DOMContentLoaded', () => {
-            // Vẽ trước bộ khung giao diện lớp và học sinh từ bộ nhớ tạm
+            // Hiển thị khung giao diện trước
             renderClasses();
             renderStudents();
             
-            // Kiểm tra xem thư viện API của Google đã sẵn sàng chưa
+            // Khởi tạo thư viện tự động
             if (typeof google !== 'undefined') {
                 tokenClient = google.accounts.oauth2.initTokenClient({
                     client_id: GOOGLE_CLIENT_ID,
@@ -198,46 +195,33 @@
                         if (tokenResponse && tokenResponse.access_token) {
                             accessToken = tokenResponse.access_token;
                             console.log("⚙️ Hệ thống đã tự động kết nối Google Drive ngầm thành công!");
-                            loadDataFromDrive(); // Tự động tải dữ liệu từ Drive về bảng
+                            loadDataFromDrive(); // Kéo dữ liệu về
                         }
                     },
                 });
                 
-                // KÍCH HOẠT QUY TRÌNH QUÉT TOKEN TỰ ĐỘNG
-                // Thiết lập độ trễ 1 giây (1000ms) để đảm bảo toàn bộ thư viện Google được nạp hoàn chỉnh vào bộ nhớ
+                // Trì hoãn 1 giây để quét phiên kết nối ngầm
                 setTimeout(() => {
                     try {
                         console.log("🔄 Đang tự động kiểm tra phiên kết nối đám mây...");
-                        // Mấu chốt: prompt: '' (chuỗi rỗng) ra lệnh cho Google cấp quyền ngầm, không mở popup
                         tokenClient.requestAccessToken({ prompt: '' });
                     } catch (err) {
-                        console.warn("Phiên kết nối cũ hết hạn hoặc đây là lần đầu tiên truy cập trên thiết bị này.", err);
+                        console.warn("Chưa có phiên kết nối ngầm, vui lòng nhấn nút Kết nối thủ công.", err);
                     }
                 }, 1000);
             }
         });
 
-        // Hàm kết nối thủ công (Chỉ đóng vai trò dự phòng nếu bạn đổi máy tính hoặc xóa lịch sử trình duyệt)
+        // Hàm kết nối thủ công (nếu quét ngầm thất bại)
         function connectGoogleDrive() {
             if (tokenClient) {
-                // Nếu quy trình ngầm thất bại, lệnh này sẽ mở popup để bạn xác nhận lại tài khoản một lần duy nhất
                 tokenClient.requestAccessToken({ prompt: 'consent' });
             } else {
-                alert("Hệ thống Google chưa sẵn sàng, vui lòng thử lại sau vài giây!");
+                alert("Thư viện Google chưa tải xong, vui lòng đợi thêm vài giây!");
             }
         }
 
-        // Hàm gọi giao diện đăng nhập Google tài khoản trường học
-        function connectGoogleDrive() {
-            if (tokenClient) {
-                // Yêu cầu cấp quyền và bỏ qua cơ chế chặn popup của trình duyệt
-                tokenClient.requestAccessToken({ prompt: 'consent' });
-            } else {
-                alert("Thư viện Google chưa được tải xong, vui lòng thử lại sau vài giây!");
-            }
-        }
-
-        // HÀM ĐỌC DỮ LIỆU TỪ GOOGLE DRIVE VỀ DASHBOARD
+        // ĐỌC DỮ LIỆU TỪ GOOGLE DRIVE
         async function loadDataFromDrive() {
             if (!accessToken) return;
             try {
@@ -245,31 +229,30 @@
                     headers: { 'Authorization': `Bearer ${accessToken}` }
                 });
                 
-                if (!response.ok) throw new Error("Không thể kết nối lấy dữ liệu từ file Drive.");
+                if (!response.ok) throw new Error("Không thể tải file từ Drive.");
                 
                 const cloudData = await response.json();
                 if (cloudData && cloudData.classes && cloudData.students) {
                     localData = cloudData;
                     renderClasses();
                     renderStudents();
-                    alert("📥 Đã đồng bộ thành công dữ liệu mới nhất từ Google Drive!");
+                    renderBusStudents(); // Cập nhật luôn cả tab xe buýt
+                    console.log("📥 Tải dữ liệu đám mây hoàn tất.");
                 }
             } catch (err) {
-                console.error(err);
-                alert("Lỗi tải dữ liệu: " + err.message + "\nNếu file trống, hãy thực hiện nhấn nút Lưu để tạo dữ liệu nền.");
+                console.error("Lỗi tải dữ liệu mây:", err);
             }
         }
 
-        // HÀM GHI ĐÈ / LƯU DỮ LIỆU TRỰC TIẾP LÊN GOOGLE DRIVE
+        // LƯU DỮ LIỆU LÊN GOOGLE DRIVE
         async function saveDataDirectly() {
             if (!accessToken) {
-                alert("⚠️ Bạn chưa kết nối tài khoản! Vui lòng ấn nút 'Kết Nối Google Drive' trước.");
+                alert("⚠️ Bạn chưa kết nối Google Drive! Vui lòng ấn nút 'Kết Nối Google Drive'.");
                 return;
             }
             try {
                 const jsonString = JSON.stringify(localData, null, 2);
                 
-                // Gửi truy vấn PATCH ghi đè trực tiếp nội dung dữ liệu nhị phân lên đám mây
                 const response = await fetch(`https://www.googleapis.com/upload/drive/v3/files/${DRIVE_FILE_ID}?uploadType=media`, {
                     method: 'PATCH',
                     headers: {
@@ -281,7 +264,6 @@
 
                 if (!response.ok) throw new Error("Lỗi phản hồi từ máy chủ Google.");
 
-                // Hiệu ứng đổi màu nút báo thành công
                 const btn = document.querySelector('button[onclick="saveDataDirectly()"]');
                 const oldText = btn.innerHTML;
                 btn.innerHTML = '<i class="fas fa-cloud-check"></i> Đã Lưu Thành Công!';
@@ -381,6 +363,7 @@
             localData.classes = localData.classes.filter(c => c !== className);
             renderClasses();
             renderStudents();
+            renderBusStudents();
         }
 
         // =========================================================
@@ -464,6 +447,7 @@
             if (index !== -1) {
                 localData.students[index].isBus = false;
                 localData.students[index].busRoute = '';
+                renderStudents();
                 renderBusStudents();
             }
         }
@@ -490,6 +474,7 @@
 
             resetStudentForm();
             renderStudents();
+            renderBusStudents();
         }
 
         function editStudent(id) {
@@ -517,6 +502,7 @@
             if (!confirm('Bạn có chắc chắn muốn xóa học sinh này?')) return;
             localData.students = localData.students.filter(s => s.id !== id);
             renderStudents();
+            renderBusStudents();
         }
 
         function resetStudentForm() {
