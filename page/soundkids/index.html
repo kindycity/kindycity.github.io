@@ -361,18 +361,18 @@
         }
 
         // HÀM 3: ĐIỀU PHỐI ÂM THANH KHI CLICK
-        function playClickSound(soundUrl, studentName) {
+        function playClickSound(soundUrl, studentName, className) {
             let cleanUrl = soundUrl ? soundUrl.trim().replace(/\\/g, '/') : '';
             const coFileAmThanh = cleanUrl !== "" && cleanUrl !== "sound/" && !cleanUrl.endsWith('/');
 
             if (coFileAmThanh) {
-                const audio = new Audio(cleanUrl);
-                audio.play().catch(error => {
+                trinhPhatAmThanh.src = cleanUrl;
+                trinhPhatAmThanh.play().catch(error => {
                     console.warn("Lỗi tệp MP3 gốc, kích hoạt AI dự phòng:", error);
-                    phatThanhAIGiongNu(`Mời học sinh ${studentName} ra về`);
+                    phatThanhAIGiongNu(`Mời học sinh ${studentName} lớp ${className} ra về`);
                 });
             } else {
-                phatThanhAIGiongNu(`Mời học sinh ${studentName} ra về`);
+                phatThanhAIGiongNu(`Mời học sinh ${studentName} lớp ${className} ra về`);
             }
         }
 
