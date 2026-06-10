@@ -177,19 +177,20 @@
         // =========================================================
         const GOOGLE_CLIENT_ID = "315332619388-96rofof1mk3hsppml8asq5tggqgkk1u5.apps.googleusercontent.com";
         const DRIVE_FILE_ID = "19UbNoshkIFWJU-IJcJsV6aNralejiuHa";
+        const API_KEY = "AIzaSyAD179D9ENAWV-SN4tT21MYsFGkxX5w1ZI";
         
         let accessToken = null;
         let tokenClient = null;
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Hiển thị khung giao diện trước
+            // 1. Vẽ trước khung giao diện trống
             renderClasses();
             renderStudents();
             
-            // 1. TỰ ĐỘNG TẢI DỮ LIỆU CÔNG KHAI KHÔNG CẦN ĐĂNG NHẬP
+            // 2. TỰ ĐỘNG TẢI DỮ LIỆU HIỂN THỊ LẬP TỨC BẰNG API KEY (Giống index.html)
             taiDuLieuCongKhaiTuDrive();
 
-            // 2. CHỈ KHỞI TẠO BỘ CÔNG CỤ LƯU (KHÔNG TỰ ĐỘNG BẬT POPUP)
+            // 3. KHỞI TẠO CỔNG BẢO MẬT (Chỉ nằm chờ, không tự động bật popup gây lỗi)
             if (typeof google !== 'undefined') {
                 tokenClient = google.accounts.oauth2.initTokenClient({
                     client_id: GOOGLE_CLIENT_ID,
@@ -197,57 +198,60 @@
                     callback: (tokenResponse) => {
                         if (tokenResponse && tokenResponse.access_token) {
                             accessToken = tokenResponse.access_token;
-                            // Sau khi đăng nhập thành công, tự động chạy lệnh Lưu file
-                            thucHienLuuLenDrive(); 
+                            console.log("⚙️ Xác thực quyền ghi Google Drive thành công!");
+                            thucHienLuuLenDrive(); // Tự động tiến hành ghi đè file sau khi đăng nhập xong
                         }
                     },
                 });
             }
         });
 
-        // HÀM TẢI DỮ LIỆU CÔNG KHAI (KHÔNG CẦN ACCOUNT GOOGLE)
+        // HÀM ĐỌC DỮ LIỆU ĐỂ HIỂN THỊ LẬP TỨC (KHÔNG CẦN ACCOUNT GOOGLE)
         async function taiDuLieuCongKhaiTuDrive() {
-            const urlFetch = `https://docs.google.com/uc?export=download&id=${DRIVE_FILE_ID}`;
+            const urlFetch = `https://www.googleapis.com/drive/v3/files/${DRIVE_FILE_ID}?alt=media&key=${API_KEY}`;
             try {
-                console.log("🔄 Đang tải dữ liệu công khai từ Google Drive...");
+                console.log("🔄 Đang nạp dữ liệu lên Dashboard bằng API Key công khai...");
                 const response = await fetch(urlFetch);
-                if (!response.ok) throw new Error("Không thể tải file từ Drive.");
+                if (!response.ok) throw new Error("Mã phản hồi từ Drive API không hợp lệ.");
                 
                 const cloudData = await response.json();
                 if (cloudData && cloudData.classes && cloudData.students) {
                     localData = cloudData;
                     renderClasses();
                     renderStudents();
-                    renderBusStudents();
-                    console.log("📥 Tải dữ liệu đám mây hoàn tất mà không cần đăng nhập.");
+                    console.log("📥 Dữ liệu đã đồng bộ và hiển thị thành công trên Dashboard!");
                 }
             } catch (err) {
-                console.error("Lỗi tải dữ liệu mây:", err);
+                console.error("Lỗi đồng bộ nạp hiển thị Dashboard:", err);
             }
         }
 
-        // HÀM KÍCH HOẠT LƯU DỮ LIỆU (CẦN XÁC MINH QUYỀN GHI)
+        // HÀM KIỂM TRA QUYỀN KHI ẤN NÚT "LƯU LÊN ĐÁM MÂY DRIVE"
         function saveDataDirectly() {
             if (!accessToken) {
-                // Nếu chưa có quyền, mở popup hỏi quyền đăng nhập Google để được phép ghi đè file
-                console.log("Chưa có quyền ghi, yêu cầu đăng nhập...");
+                // Nếu chưa xác thực tài khoản ở phiên làm việc này, bật popup đăng nhập Gmail
+                console.log("Chưa có mã token quyền ghi, đang mở popup xác thực...");
                 if (tokenClient) {
                     tokenClient.requestAccessToken({ prompt: 'consent' });
                 } else {
-                    alert("Thư viện Google chưa sẵn sàng, vui lòng thử lại!");
+                    alert("Hệ thống thư viện Google chưa tải xong, vui lòng thử lại sau vài giây!");
                 }
             } else {
-                // Nếu đã đăng nhập trước đó rồi thì lưu luôn
+                // Nếu trước đó đã bấm và có token rồi thì lưu thẳng không hiện popup nữa
                 thucHienLuuLenDrive();
             }
         }
 
-        // TIẾN TRÌNH GHI ĐÈ FILE LÊN GOOGLE DRIVE
+        // TIẾN TRÌNH GHI ĐÈ / LƯU FILE LÊN GOOGLE DRIVE
         async function thucHienLuuLenDrive() {
             try {
-                document.querySelector('button[onclick="saveDataDirectly()"]').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý...';
-                
+                const btn = document.querySelector('button[onclick="saveDataDirectly()"]');
+                const oldText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang đồng bộ đám mây...';
+
                 const jsonString = JSON.stringify(localData, null, 2);
+                
+                // Gửi lệnh ghi đè dữ liệu lên file trên Drive từ xa
                 const response = await fetch(`https://www.googleapis.com/upload/drive/v3/files/${DRIVE_FILE_ID}?uploadType=media`, {
                     method: 'PATCH',
                     headers: {
@@ -257,19 +261,19 @@
                     body: jsonString
                 });
 
-                if (!response.ok) throw new Error("Lỗi phản hồi từ máy chủ Google.");
+                if (!response.ok) throw new Error("Máy chủ Google từ chối lệnh ghi đè.");
 
-                const btn = document.querySelector('button[onclick="saveDataDirectly()"]');
-                btn.innerHTML = '<i class="fas fa-cloud-check"></i> Đã Lưu Thành Công!';
+                // Hiệu ứng thông báo thành công
+                btn.innerHTML = '<i class="fas fa-check"></i> Đã Lưu Đám Mây Thành Công!';
                 btn.classList.replace('bg-emerald-500', 'bg-blue-500');
                 setTimeout(() => {
-                    btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Lưu Lên Đám Mây Drive';
+                    btn.innerHTML = oldText;
                     btn.classList.replace('bg-blue-500', 'bg-emerald-500');
                 }, 2000);
 
             } catch (err) {
                 console.error(err);
-                alert('Lưu dữ liệu lên đám mây thất bại: ' + err.message);
+                alert('Thao tác lưu thất bại: ' + err.message);
                 document.querySelector('button[onclick="saveDataDirectly()"]').innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Lưu Lên Đám Mây Drive';
             }
         }
