@@ -268,11 +268,14 @@
         // HÀM 1: TẢI DỮ LIỆU ĐÁM MÂY TỪ GOOGLE DRIVE
         async function taiDuLieuTuGoogleDrive() {
             const FILE_ID = "19UbNoshkIFWJU-IJcJsV6aNralejiuHa"; 
-            const urlFetch = `https://docs.google.com/uc?export=download&id=${FILE_ID}`;
+            const API_KEY = "AIzaSyAD179D9ENAWV-SN4tT21MYsFGkxX5w1ZI";
+
+            // Đường dẫn API chính thức của Google Drive (Không bao giờ bị lỗi CORS)
+            const urlFetch = `https://www.googleapis.com/drive/v3/files/${FILE_ID}?alt=media&key=${API_KEY}`;
 
             try {
                 const response = await fetch(urlFetch);
-                if (!response.ok) throw new Error("Không thể tải cấu hình");
+                if (!response.ok) throw new Error("Không thể tải cấu hình từ Google Drive");
                 
                 const data = await response.json();
                 window.kindergartenData = data;
