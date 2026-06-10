@@ -76,7 +76,7 @@
         
         // Khởi tạo nền tảng bảo mật
         firebase.initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
+        const auth = firebase.auth();
 
         let confirmationResult = null;
 
