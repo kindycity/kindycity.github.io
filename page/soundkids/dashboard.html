@@ -6,6 +6,7 @@
     <title>Dashboard Quản Lý Học Sinh</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body class="bg-slate-50 font-sans text-slate-800 flex min-h-screen">
 
@@ -28,15 +29,15 @@
         <header class="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-40">
             <div class="max-w-7xl mx-auto px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
                 <div>
-                    <h1 class="text-xl font-bold text-slate-900 tracking-tight">HỆ THỐNG ĐÓN BÉ HL</h1>
+                    <h1 class="text-xl font-bold text-slate-900 tracking-tight">HỆ THỐNG ĐÓN BÉ KINDYCITY Q7</h1>
                     <p class="text-xs text-slate-500">Trang quản lý dữ liệu nội bộ (Không Server)</p>
                 </div>
                 <div class="flex items-center gap-2">
-                    <button onclick="saveDataDirectly()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg font-medium shadow transition-all flex items-center gap-2 text-sm">
-                        <i class="fas fa-save"></i> Lưu Trực Tiếp Vào Thư Mục
+                    <button onclick="connectGoogleDrive()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium shadow transition-all flex items-center gap-2 text-sm">
+                        <i class="fab fa-google"></i> Kết Nối Google Drive
                     </button>
-                    <button onclick="downloadDatabaseFile()" class="bg-slate-700 hover:bg-slate-800 text-white px-4 py-2 rounded-lg font-medium shadow transition-all flex items-center gap-2 text-sm">
-                        <i class="fas fa-download"></i> Tải File database.js
+                    <button onclick="saveDataDirectly()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg font-medium shadow transition-all flex items-center gap-2 text-sm">
+                        <i class="fas fa-cloud-upload-alt"></i> Lưu Lên Đám Mây Drive
                     </button>
                 </div>
             </div>
@@ -78,7 +79,7 @@
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Đường dẫn tệp Âm thanh</label>
-                            <input type="text" id="student-sound" required placeholder="Ví dụ: sound/koala_an.mp3" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm">
+                            <input type="text" id="student-sound" required placeholder="Nếu không nhập AI sẽ chạy" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm">
                         </div>
                         
                         <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-slate-100 pt-4 mt-2">
@@ -175,37 +176,103 @@
         let fileHandle = null;
 
         // =========================================================
-        // 3. HỆ THỐNG GHI NHỚ ĐƯỜNG DẪN TỆP TỰ ĐỘNG (INDEXEDDB)
+        // CẤU HÌNH THÔNG SỐ GOOGLE DRIVE API CỦA BẠN
         // =========================================================
-        function getBrowserDB() {
-            return new Promise((resolve, reject) => {
-                const request = indexedDB.open('DashboardDB', 1);
-                request.onupgradeneeded = (e) => e.target.result.createObjectStore('fileStorage');
-                request.onsuccess = () => resolve(request.result);
-                request.onerror = () => reject(request.error);
-            });
-        }
+        const GOOGLE_CLIENT_ID = "ĐIỀN_CLIENT_ID_CỦA_BẠN_VÀO_ĐÂY.apps.googleusercontent.com";
+        const DRIVE_FILE_ID = "ĐIỀN_FILE_ID_CỦA_FILE_DATABASE_JSON_VÀO_ĐÂY";
+        
+        let accessToken = null;
+        let tokenClient = null;
 
-        async function saveHandleToMemory(handle) {
-            const db = await getBrowserDB();
-            db.transaction('fileStorage', 'readwrite').objectStore('fileStorage').put(handle, 'dbFileHandle');
-        }
-
-        async function loadHandleFromMemory() {
-            const db = await getBrowserDB();
-            return new Promise((resolve) => {
-                const request = db.transaction('fileStorage', 'readonly').objectStore('fileStorage').get('dbFileHandle');
-                request.onsuccess = () => resolve(request.result);
-                request.onerror = () => resolve(null);
-            });
-        }
-
-        // Khởi tạo trang
-        document.addEventListener('DOMContentLoaded', async () => {
+        // Khởi tạo thư viện xác thực khi trang tải xong
+        document.addEventListener('DOMContentLoaded', () => {
             renderClasses();
             renderStudents();
-            fileHandle = await loadHandleFromMemory(); 
+            
+            if (typeof google !== 'undefined') {
+                tokenClient = google.accounts.oauth2.initTokenClient({
+                    client_id: GOOGLE_CLIENT_ID,
+                    scope: 'https://www.googleapis.com/auth/drive.file',
+                    callback: (tokenResponse) => {
+                        if (tokenResponse && tokenResponse.access_token) {
+                            accessToken = tokenResponse.access_token;
+                            console.log("Xác thực Google thành công!");
+                            loadDataFromDrive(); // Tự động tải dữ liệu khi kết nối xong
+                        }
+                    },
+                });
+            }
         });
+
+        // Hàm gọi giao diện đăng nhập Google tài khoản trường học
+        function connectGoogleDrive() {
+            if (tokenClient) {
+                // Yêu cầu cấp quyền và bỏ qua cơ chế chặn popup của trình duyệt
+                tokenClient.requestAccessToken({ prompt: 'consent' });
+            } else {
+                alert("Thư viện Google chưa được tải xong, vui lòng thử lại sau vài giây!");
+            }
+        }
+
+        // HÀM ĐỌC DỮ LIỆU TỪ GOOGLE DRIVE VỀ DASHBOARD
+        async function loadDataFromDrive() {
+            if (!accessToken) return;
+            try {
+                const response = await fetch(`https://www.googleapis.com/drive/v3/files/${DRIVE_FILE_ID}?alt=media`, {
+                    headers: { 'Authorization': `Bearer ${accessToken}` }
+                });
+                
+                if (!response.ok) throw new Error("Không thể kết nối lấy dữ liệu từ file Drive.");
+                
+                const cloudData = await response.json();
+                if (cloudData && cloudData.classes && cloudData.students) {
+                    localData = cloudData;
+                    renderClasses();
+                    renderStudents();
+                    alert("📥 Đã đồng bộ thành công dữ liệu mới nhất từ Google Drive!");
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Lỗi tải dữ liệu: " + err.message + "\nNếu file trống, hãy thực hiện nhấn nút Lưu để tạo dữ liệu nền.");
+            }
+        }
+
+        // HÀM GHI ĐÈ / LƯU DỮ LIỆU TRỰC TIẾP LÊN GOOGLE DRIVE
+        async function saveDataDirectly() {
+            if (!accessToken) {
+                alert("⚠️ Bạn chưa kết nối tài khoản! Vui lòng ấn nút 'Kết Nối Google Drive' trước.");
+                return;
+            }
+            try {
+                const jsonString = JSON.stringify(localData, null, 2);
+                
+                // Gửi truy vấn PATCH ghi đè trực tiếp nội dung dữ liệu nhị phân lên đám mây
+                const response = await fetch(`https://www.googleapis.com/upload/drive/v3/files/${DRIVE_FILE_ID}?uploadType=media`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: jsonString
+                });
+
+                if (!response.ok) throw new Error("Lỗi phản hồi từ máy chủ Google.");
+
+                // Hiệu ứng đổi màu nút báo thành công
+                const btn = document.querySelector('button[onclick="saveDataDirectly()"]');
+                const oldText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-cloud-check"></i> Đã Lưu Thành Công!';
+                btn.classList.replace('bg-emerald-500', 'bg-blue-500');
+                setTimeout(() => {
+                    btn.innerHTML = oldText;
+                    btn.classList.replace('bg-blue-500', 'bg-emerald-500');
+                }, 2000);
+
+            } catch (err) {
+                console.error(err);
+                alert('Lưu dữ liệu lên đám mây thất bại: ' + err.message);
+            }
+        }
 
         // =========================================================
         // 4. LOGIC ĐIỀU HƯỚNG TAB SIDEBAR
@@ -437,57 +504,6 @@
             document.getElementById('submit-btn').innerText = "Lưu Học Sinh";
             document.getElementById('cancel-edit-btn').classList.add('hidden');
             toggleBusRouteInput();
-        }
-
-        // =========================================================
-        // 9. XỬ LÝ LƯU TRỰC TIẾP KHÔNG QUA SERVER
-        // =========================================================
-        async function saveDataDirectly() {
-            try {
-                if (fileHandle) {
-                    if ((await fileHandle.queryPermission({ mode: 'readwrite' })) !== 'granted') {
-                        const requestPerm = await fileHandle.requestPermission({ mode: 'readwrite' });
-                        if (requestPerm !== 'granted') throw new Error("Từ chối cấp quyền ghi file.");
-                    }
-                } else {
-                    alert("Hãy chọn tệp 'database.js' để kích hoạt bộ nhớ tự động cho các lần sau!");
-                    const options = {
-                        suggestedName: 'database.js',
-                        types: [{ description: 'JavaScript Database', accept: {'text/javascript': ['.js']} }],
-                    };
-                    [fileHandle] = await window.showOpenFilePicker(options);
-                    await saveHandleToMemory(fileHandle);
-                }
-                
-                const writable = await fileHandle.createWritable();
-                const outputContent = `// Tệp lưu trữ dữ liệu tự động - Không sửa thủ công\nwindow.kindergartenData = ${JSON.stringify(localData, null, 2)};`;
-                await writable.write(outputContent);
-                await writable.close();
-                
-                const btn = document.querySelector('button[onclick="saveDataDirectly()"]');
-                const oldText = btn.innerHTML;
-                btn.innerHTML = '<i class="fas fa-check"></i> Đã Lưu Thành Công!';
-                btn.classList.replace('bg-emerald-500', 'bg-blue-500');
-                setTimeout(() => {
-                    btn.innerHTML = oldText;
-                    btn.classList.replace('bg-blue-500', 'bg-emerald-500');
-                }, 2000);
-
-            } catch (err) {
-                console.error(err);
-                alert('Lưu thất bại: ' + (err.message || 'Hủy thao tác.'));
-            }
-        }
-
-        function downloadDatabaseFile() {
-            const outputContent = `// Tệp lưu trữ dữ liệu tự động - Không sửa thủ công\nwindow.kindergartenData = ${JSON.stringify(localData, null, 2)};`;
-            const blob = new Blob([outputContent], { type: 'text/javascript' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'database.js';
-            a.click();
-            URL.revokeObjectURL(url);
         }
     </script>
 </body>
