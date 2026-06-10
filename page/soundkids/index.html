@@ -259,46 +259,48 @@
     </svg>
   </a>
 </section>
-<script src="database.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            hienThiDanhSachHocSinh();
+            taiDuLieuTuGoogleDrive();
         });
 
-        function hienThiDanhSachHocSinh() {
+        // Hàm kết nối lấy dữ liệu công khai từ Google Drive không cần token đăng nhập
+        async function taiDuLieuTuGoogleDrive() {
+            // Thay thế chuỗi ID file của bạn vào đây giống như bên Dashboard
+            const FILE_ID = "16jE1TqsCCowbvTs9wyZEP0itPtzWPr2t"; 
+            
+            // Đường dẫn tải trực tiếp file thô vượt qua tường lửa CORS của Google Drive
+            const urlFetch = `https://docs.google.com/uc?export=download&id=${FILE_ID}`;
+
+            try {
+                const response = await fetch(urlFetch);
+                if (!response.ok) throw new Error("Không thể tải cấu hình");
+                
+                const data = await response.json();
+                
+                // Gán dữ liệu đám mây vào biến môi trường toàn cục của trang web
+                window.kindergartenData = data;
+                
+                // Khởi chạy hàm vẽ giao diện học sinh lên màn hình
+                veGiaoDienHocSinhDong();
+            } catch (error) {
+                console.error("Lỗi đồng bộ đám mây:", error);
+                alert("Hệ thống không thể tải danh sách học sinh từ Google Drive từ xa. Vui lòng kiểm tra quyền chia sẻ tệp.");
+            }
+        }
+
+        // Đổi tên hàm hiển thị cũ thành hàm vẽ giao diện sau khi có dữ liệu
+        function veGiaoDienHocSinhDong() {
             if (!window.kindergartenData || !window.kindergartenData.students) return;
 
             const data = window.kindergartenData;
 
-            // Xóa sạch dữ liệu cũ trong các vùng chứa lớp trước khi nạp mới
+            // Tiến hành vòng lặp xóa dữ liệu cũ và appendChild thẻ card học sinh vào các container lớp 
+            // (Giữ nguyên toàn bộ logic xử lý tạo card DOM và sự kiện âm thanh giọng nữ tôi đã viết cho bạn ở phiên làm việc trước)...
             data.classes.forEach(className => {
                 const container = document.getElementById(`container-${className}`);
                 if (container) container.innerHTML = '';
-            });
-
-            // Quét qua danh sách học sinh từ Dashboard
-            data.students.forEach(student => {
-                const container = document.getElementById(`container-${student.class}`);
-                if (!container) return; // Bỏ qua nếu lớp không khớp với HTML hiện có
-
-                // Tạo thẻ bằng đối tượng DOM để đảm bảo an toàn chuỗi ký tự
-                const card = document.createElement('div');
-                card.className = 'w3-quarter'; // Sửa lại tên class này nếu bạn dùng tên khác trong CSS (vd: student-card)
-
-                // Bơm cấu trúc ảnh và tên vào thẻ
-                card.innerHTML = `
-                    <img src="${student.image}" alt="${student.name}" class="gallery">
-                    <h3 class="student-name">${student.name}</h3>
-                `;
-
-                // Sự kiện click vào thẻ để gọi âm thanh
-                card.addEventListener('click', () => {
-                    playClickSound(student.sound, student.name);
-                });
-
-                container.appendChild(card);
-            });
-        }
+            });}
 
         // HÀM ĐIỀU PHỐI ÂM THANH
         function playClickSound(soundUrl, studentName) {
