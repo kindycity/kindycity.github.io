@@ -5,23 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Quản Lý Học Sinh</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      // =========================================================
-// LỚP CHẶN BẢO MẬT KHÔNG CHO VÀO THẲNG DASHBOARD
-// =========================================================
-(function kiemTraBaoMatNghiemNgac() {
-    const sessionToken = sessionStorage.getItem('HL_ADMIN_SESSION');
-    if (sessionToken !== 'AUTHENTICATED_OK') {
-        // Nếu không tìm thấy bằng chứng đã đăng nhập qua số điện thoại, trục xuất ngay về trang login
-        alert('⚠️ Cảnh báo bảo mật: Khu vực riêng tư! Vui lòng đăng nhập bằng số điện thoại để truy cập.');
-        window.location.replace('login.html');
-    }
-})();
-// =========================================================
-
-// Toàn bộ code xử lý logic localData, renderClasses, renderStudents cũ của bạn nằm tiếp tục ở dưới này...
-let localData = window.kindergartenData || { classes: ["Koala", "Panda", "Dolphin", "Giraffe"], students: [] };
-    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-slate-50 font-sans text-slate-800 flex min-h-screen">
@@ -455,6 +438,342 @@ let localData = window.kindergartenData || { classes: ["Koala", "Panda", "Dolphi
                     }
                 } else {
                     alert("Hãy chọn tệp 'database.js' để kích hoạt bộ nhớ tự động!");
+                    const options = {
+                        suggestedName: 'database.js',
+                        types: [{ description: 'JavaScript Database', accept: {'text/javascript': ['.js']} }],
+                    };
+                    [fileHandle] = await window.showOpenFilePicker(options);
+                    await saveHandleToMemory(fileHandle);
+                }
+                
+                const writable = await fileHandle.createWritable();
+                const outputContent = `// Tệp lưu trữ dữ liệu tự động - Không sửa thủ công\nwindow.kindergartenData = ${JSON.stringify(localData, null, 2)};`;
+                await writable.write(outputContent);
+                await writable.close();
+                
+                const btn = document.querySelector('button[onclick="saveDataDirectly()"]');
+                const oldText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check"></i> Đã Lưu Thành Công!';
+                btn.classList.replace('bg-emerald-500', 'bg-blue-500');
+                setTimeout(() => {
+                    btn.innerHTML = oldText;
+                    btn.classList.replace('bg-blue-500', 'bg-emerald-500');
+                }, 2000);
+
+            } catch (err) {
+                console.error(err);
+                alert('Lưu thất bại: ' + (err.message || 'Hủy thao tác.'));
+            }
+        }
+
+        function downloadDatabaseFile() {
+            const outputContent = `// Tệp lưu trữ dữ liệu tự động - Không sửa thủ công\nwindow.kindergartenData = ${JSON.stringify(localData, null, 2)};`;
+            const blob = new Blob([outputContent], { type: 'text/javascript' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'database.js';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+    </script>
+    <script src="database.js"></script>
+
+    <script>
+        // =========================================================
+        // 1. LỚP CHẶN BẢO MẬT (BẮT BUỘC PHẢI CÓ DẤU CHẤM PHẨY Ở CUỐI)
+        // =========================================================
+        (function kiemTraBaoMatNghiemNgac() {
+            const sessionToken = sessionStorage.getItem('HL_ADMIN_SESSION');
+            if (sessionToken !== 'AUTHENTICATED_OK') {
+                alert('⚠️ Cảnh báo bảo mật: Khu vực riêng tư! Vui lòng đăng nhập bằng số điện thoại để truy cập.');
+                window.location.replace('login.html');
+            }
+        })(); // <--- DẤU CHẤM PHẨY Ở ĐÂY LÀ BẮT BUỘC ĐỂ TRÁNH LỖI localData!
+
+        // =========================================================
+        // 2. KHỞI TẠO BIẾN VÀ BỘ NHỚ TẠM CỤC BỘ
+        // =========================================================
+        let localData = window.kindergartenData || { classes: ["Koala", "Panda", "Dolphin", "Giraffe"], students: [] };
+        let fileHandle = null;
+
+        // =========================================================
+        // 3. HỆ THỐNG GHI NHỚ ĐƯỜNG DẪN TỆP TỰ ĐỘNG (INDEXEDDB)
+        // =========================================================
+        function getBrowserDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open('DashboardDB', 1);
+                request.onupgradeneeded = (e) => e.target.result.createObjectStore('fileStorage');
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        async function saveHandleToMemory(handle) {
+            const db = await getBrowserDB();
+            db.transaction('fileStorage', 'readwrite').objectStore('fileStorage').put(handle, 'dbFileHandle');
+        }
+
+        async function loadHandleFromMemory() {
+            const db = await getBrowserDB();
+            return new Promise((resolve) => {
+                const request = db.transaction('fileStorage', 'readonly').objectStore('fileStorage').get('dbFileHandle');
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => resolve(null);
+            });
+        }
+
+        // KHỞI TẠO TRANG KHI MỞ TRÌNH DUYỆT
+        document.addEventListener('DOMContentLoaded', async () => {
+            renderClasses();
+            renderStudents();
+            fileHandle = await loadHandleFromMemory(); // Nạp lại đường dẫn file cũ nếu có
+        });
+
+        // =========================================================
+        // 4. LOGIC ĐIỀU HƯỚNG TAB SIDEBAR (TỔNG QUAN / XE BUÝT)
+        // =========================================================
+        function switchTab(tabName) {
+            const viewGeneral = document.getElementById('view-general');
+            const viewBus = document.getElementById('view-bus');
+            const btnGeneral = document.getElementById('btn-tab-general');
+            const btnBus = document.getElementById('btn-tab-bus');
+
+            if (tabName === 'general') {
+                viewGeneral.classList.remove('hidden');
+                viewBus.classList.add('hidden');
+                btnGeneral.className = "w-12 h-12 rounded-xl flex items-center justify-center transition-all text-white bg-indigo-600 shadow-lg shadow-indigo-600/20";
+                btnBus.className = "w-12 h-12 rounded-xl flex items-center justify-center transition-all text-slate-400 hover:text-white hover:bg-slate-800";
+                renderStudents();
+            } else if (tabName === 'bus') {
+                viewGeneral.classList.add('hidden');
+                viewBus.classList.remove('hidden');
+                btnBus.className = "w-12 h-12 rounded-xl flex items-center justify-center transition-all text-white bg-indigo-600 shadow-lg shadow-indigo-600/20";
+                btnGeneral.className = "w-12 h-12 rounded-xl flex items-center justify-center transition-all text-slate-400 hover:text-white hover:bg-slate-800";
+                renderBusStudents();
+            }
+        }
+
+        function toggleBusRouteInput() {
+            const isBusChecked = document.getElementById('student-is-bus').checked;
+            const container = document.getElementById('bus-route-container');
+            if (isBusChecked) {
+                container.classList.remove('hidden');
+            } else {
+                container.classList.add('hidden');
+                document.getElementById('student-bus-route').value = '';
+            }
+        }
+
+        // =========================================================
+        // 5. QUẢN LÝ LỚP HỌC & BỘ LỌC
+        // =========================================================
+        function renderClasses() {
+            const classList = document.getElementById('class-list');
+            const studentClassSelect = document.getElementById('student-class');
+            const filterClassSelect = document.getElementById('filter-class');
+            
+            classList.innerHTML = '';
+            studentClassSelect.innerHTML = '<option value="">-- Chọn lớp học --</option>';
+            
+            let currentFilter = filterClassSelect ? filterClassSelect.value : 'all';
+            if (filterClassSelect) {
+                filterClassSelect.innerHTML = '<option value="all">Tất cả các lớp</option>';
+            }
+            
+            localData.classes.forEach((className) => {
+                classList.innerHTML += `
+                    <div class="flex items-center justify-between bg-slate-50 px-3 py-2 rounded-lg border border-slate-200 hover:bg-slate-100 transition">
+                        <span class="font-medium text-slate-700 text-sm">${className}</span>
+                        <button onclick="deleteClass('${className}')" class="text-rose-500 hover:text-rose-700 p-1 transition">
+                            <i class="fas fa-trash-alt text-xs"></i>
+                        </button>
+                    </div>
+                `;
+                studentClassSelect.innerHTML += `<option value="${className}">${className}</option>`;
+                if (filterClassSelect) filterClassSelect.innerHTML += `<option value="${className}">${className}</option>`;
+            });
+
+            if (filterClassSelect) filterClassSelect.value = currentFilter;
+        }
+
+        function addClass() {
+            const input = document.getElementById('new-class-input');
+            const className = input.value.trim();
+            if (!className) return alert('Vui lòng nhập tên lớp!');
+            if (localData.classes.includes(className)) return alert('Lớp này đã tồn tại!');
+            localData.classes.push(className);
+            input.value = '';
+            renderClasses();
+        }
+
+        function deleteClass(className) {
+            if (localData.students.some(s => s.class === className)) {
+                if (!confirm(`Lớp ${className} đang có học sinh. Bạn vẫn muốn xóa chứ?`)) return;
+            }
+            localData.classes = localData.classes.filter(c => c !== className);
+            renderClasses();
+            renderStudents();
+        }
+
+        // =========================================================
+        // 6. QUẢN LÝ DANH SÁCH HỌC SINH (TAB TỔNG QUAN)
+        // =========================================================
+        function renderStudents() {
+            const tbody = document.getElementById('student-table-body');
+            const filterClassSelect = document.getElementById('filter-class');
+            const filterValue = filterClassSelect ? filterClassSelect.value : 'all';
+            
+            let filteredStudents = localData.students;
+            if (filterValue !== 'all') {
+                filteredStudents = localData.students.filter(s => s.class === filterValue);
+            }
+
+            document.getElementById('student-count').innerText = `${filteredStudents.length} bé`;
+            tbody.innerHTML = '';
+
+            if (filteredStudents.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-10 text-slate-400 font-medium">Chưa có dữ liệu học sinh nào.</td></tr>`;
+                return;
+            }
+
+            filteredStudents.forEach((student) => {
+                const busBadge = student.isBus 
+                    ? `<span class="px-2 py-0.5 bg-amber-100 text-amber-800 text-xs font-bold rounded-full border border-amber-200 flex items-center gap-1 w-max"><i class="fas fa-bus text-[10px]"></i> Đi xe</span>`
+                    : `<span class="text-xs text-slate-400">Tự đưa đón</span>`;
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+                        <td class="px-6 py-3.5 font-semibold text-slate-900">${student.name}</td>
+                        <td class="px-6 py-3.5"><span class="px-2.5 py-1 bg-indigo-50 text-indigo-700 rounded-full text-xs font-bold border border-indigo-100">${student.class}</span></td>
+                        <td class="px-6 py-3.5">${busBadge}</td>
+                        <td class="px-6 py-3.5 text-right space-x-2">
+                            <button onclick="editStudent('${student.id}')" class="text-indigo-600 hover:text-indigo-900 font-semibold text-xs border border-indigo-200 px-2 py-1 rounded hover:bg-indigo-50 transition">Sửa</button>
+                            <button onclick="deleteStudent('${student.id}')" class="text-rose-600 hover:text-rose-900 font-semibold text-xs border border-rose-200 px-2 py-1 rounded hover:bg-rose-50 transition">Xóa</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // =========================================================
+        // 7. QUẢN LÝ RIÊNG BIỆT DANH SÁCH XE BUÝT (TAB XE BUÝT)
+        // =========================================================
+        function renderBusStudents() {
+            const tbody = document.getElementById('bus-table-body');
+            const busStudents = localData.students.filter(s => s.isBus === true);
+            
+            document.getElementById('bus-student-count').innerText = `${busStudents.length} bé đi xe`;
+            tbody.innerHTML = '';
+
+            if (busStudents.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-10 text-slate-500 font-medium bg-slate-50">Hiện tại không có bé nào về bằng xe buýt.</td></tr>`;
+                return;
+            }
+
+            busStudents.forEach((student) => {
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+                        <td class="px-6 py-3.5 font-semibold text-slate-900">${student.name}</td>
+                        <td class="px-6 py-3.5"><span class="px-2.5 py-1 bg-indigo-50 text-indigo-700 rounded-full text-xs font-bold border border-indigo-100">${student.class}</span></td>
+                        <td class="px-6 py-3.5 font-medium text-slate-700">${student.busRoute || 'Chưa phân tuyến'}</td>
+                        <td class="px-6 py-3.5 text-right space-x-2">
+                            <button onclick="editStudentFromBus('${student.id}')" class="text-indigo-600 hover:text-indigo-900 font-semibold text-xs border border-indigo-200 px-2 py-1 rounded hover:bg-indigo-50 transition">Sửa nhanh</button>
+                            <button onclick="removeBusStatus('${student.id}')" class="text-rose-600 hover:text-rose-900 font-semibold text-xs border border-rose-200 px-2 py-1 rounded hover:bg-rose-50 transition">Hủy đi xe</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function editStudentFromBus(id) {
+            switchTab('general');
+            editStudent(id);
+        }
+
+        function removeBusStatus(id) {
+            if (!confirm('Bạn muốn hủy đăng ký dịch vụ xe buýt của bé này?')) return;
+            const index = localData.students.findIndex(s => s.id === id);
+            if (index !== -1) {
+                localData.students[index].isBus = false;
+                localData.students[index].busRoute = '';
+                renderBusStudents();
+            }
+        }
+
+        // =========================================================
+        // 8. XỬ LÝ LƯU/CẬP NHẬT DỮ LIỆU TỪ FORM HỌC SINH
+        // =========================================================
+        function handleStudentSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('student-id').value;
+            const name = document.getElementById('student-name').value.trim();
+            const sClass = document.getElementById('student-class').value;
+            const image = document.getElementById('student-image').value.trim();
+            const sound = document.getElementById('student-sound').value.trim();
+            const isBus = document.getElementById('student-is-bus').checked;
+            const busRoute = document.getElementById('student-bus-route').value.trim();
+
+            if (id) {
+                const index = localData.students.findIndex(s => s.id === id);
+                if (index !== -1) localData.students[index] = { id, name, class: sClass, image, sound, isBus, busRoute };
+            } else {
+                localData.students.push({ id: 'st-' + Date.now(), name, class: sClass, image, sound, isBus, busRoute });
+            }
+
+            resetStudentForm();
+            renderStudents();
+        }
+
+        function editStudent(id) {
+            const student = localData.students.find(s => s.id === id);
+            if (!student) return;
+
+            document.getElementById('student-id').value = student.id;
+            document.getElementById('student-name').value = student.name;
+            document.getElementById('student-class').value = student.class;
+            document.getElementById('student-image').value = student.image;
+            document.getElementById('student-sound').value = student.sound;
+            document.getElementById('student-is-bus').checked = student.isBus || false;
+            document.getElementById('student-bus-route').value = student.busRoute || '';
+            
+            toggleBusRouteInput();
+
+            document.getElementById('form-title').innerHTML = `<i class="fas fa-edit text-amber-500"></i> Chỉnh Sửa Thông Tin Bé`;
+            document.getElementById('submit-btn').className = "bg-amber-500 hover:bg-amber-600 text-white px-5 py-2 rounded-lg font-medium transition text-sm";
+            document.getElementById('submit-btn').innerText = "Cập Nhật Thông Tin";
+            document.getElementById('cancel-edit-btn').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function deleteStudent(id) {
+            if (!confirm('Bạn có chắc chắn muốn xóa học sinh này?')) return;
+            localData.students = localData.students.filter(s => s.id !== id);
+            renderStudents();
+        }
+
+        function resetStudentForm() {
+            document.getElementById('student-form').reset();
+            document.getElementById('student-id').value = '';
+            document.getElementById('form-title').innerHTML = `<i class="fas fa-user-plus text-indigo-500"></i> Thêm Bé Vào Danh Sách`;
+            document.getElementById('submit-btn').className = "bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg font-medium transition text-sm";
+            document.getElementById('submit-btn').innerText = "Lưu Học Sinh";
+            document.getElementById('cancel-edit-btn').classList.add('hidden');
+            toggleBusRouteInput();
+        }
+
+        // =========================================================
+        // 9. XỬ LÝ LƯU TRỰC TIẾP KHÔNG QUA SERVER
+        // =========================================================
+        async function saveDataDirectly() {
+            try {
+                if (fileHandle) {
+                    if ((await fileHandle.queryPermission({ mode: 'readwrite' })) !== 'granted') {
+                        const requestPerm = await fileHandle.requestPermission({ mode: 'readwrite' });
+                        if (requestPerm !== 'granted') throw new Error("Từ chối cấp quyền ghi file.");
+                    }
+                } else {
+                    alert("Hãy chọn tệp 'database.js' để kích hoạt bộ nhớ tự động cho các lần sau!");
                     const options = {
                         suggestedName: 'database.js',
                         types: [{ description: 'JavaScript Database', accept: {'text/javascript': ['.js']} }],
