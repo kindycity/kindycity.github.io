@@ -193,7 +193,7 @@
             if (typeof google !== 'undefined') {
                 tokenClient = google.accounts.oauth2.initTokenClient({
                     client_id: GOOGLE_CLIENT_ID,
-                    scope: 'https://www.googleapis.com/auth/drive.file',
+                    scope: 'https://www.googleapis.com/auth/drive',
                     callback: (tokenResponse) => {
                         if (tokenResponse && tokenResponse.access_token) {
                             accessToken = tokenResponse.access_token;
