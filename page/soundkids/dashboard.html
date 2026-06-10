@@ -183,11 +183,13 @@
         let accessToken = null;
         let tokenClient = null;
 
-        // Khởi tạo thư viện xác thực khi trang tải xong
+        // TỰ ĐỘNG KHỞI TẠO VÀ KẾT NỐI NGẦM KHI MỞ TRANG
         document.addEventListener('DOMContentLoaded', () => {
+            // Vẽ trước bộ khung giao diện lớp và học sinh từ bộ nhớ tạm
             renderClasses();
             renderStudents();
             
+            // Kiểm tra xem thư viện API của Google đã sẵn sàng chưa
             if (typeof google !== 'undefined') {
                 tokenClient = google.accounts.oauth2.initTokenClient({
                     client_id: GOOGLE_CLIENT_ID,
@@ -195,13 +197,35 @@
                     callback: (tokenResponse) => {
                         if (tokenResponse && tokenResponse.access_token) {
                             accessToken = tokenResponse.access_token;
-                            console.log("Xác thực Google thành công!");
-                            loadDataFromDrive(); // Tự động tải dữ liệu khi kết nối xong
+                            console.log("⚙️ Hệ thống đã tự động kết nối Google Drive ngầm thành công!");
+                            loadDataFromDrive(); // Tự động tải dữ liệu từ Drive về bảng
                         }
                     },
                 });
+                
+                // KÍCH HOẠT QUY TRÌNH QUÉT TOKEN TỰ ĐỘNG
+                // Thiết lập độ trễ 1 giây (1000ms) để đảm bảo toàn bộ thư viện Google được nạp hoàn chỉnh vào bộ nhớ
+                setTimeout(() => {
+                    try {
+                        console.log("🔄 Đang tự động kiểm tra phiên kết nối đám mây...");
+                        // Mấu chốt: prompt: '' (chuỗi rỗng) ra lệnh cho Google cấp quyền ngầm, không mở popup
+                        tokenClient.requestAccessToken({ prompt: '' });
+                    } catch (err) {
+                        console.warn("Phiên kết nối cũ hết hạn hoặc đây là lần đầu tiên truy cập trên thiết bị này.", err);
+                    }
+                }, 1000);
             }
         });
+
+        // Hàm kết nối thủ công (Chỉ đóng vai trò dự phòng nếu bạn đổi máy tính hoặc xóa lịch sử trình duyệt)
+        function connectGoogleDrive() {
+            if (tokenClient) {
+                // Nếu quy trình ngầm thất bại, lệnh này sẽ mở popup để bạn xác nhận lại tài khoản một lần duy nhất
+                tokenClient.requestAccessToken({ prompt: 'consent' });
+            } else {
+                alert("Hệ thống Google chưa sẵn sàng, vui lòng thử lại sau vài giây!");
+            }
+        }
 
         // Hàm gọi giao diện đăng nhập Google tài khoản trường học
         function connectGoogleDrive() {
